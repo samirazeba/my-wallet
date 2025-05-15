@@ -135,5 +135,5 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-
+# DB credentials
 backend/config/db.js

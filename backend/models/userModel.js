@@ -12,3 +12,11 @@ exports.register = async (first_name, last_name, email, password, phone_number) 
     );
     return rows;
 };
+
+exports.findUserByEmail = async (email) => {
+    const [rows] = await db.query(
+        "SELECT * FROM users WHERE email = ?",
+        [email]
+    );
+    return rows[0]; // returns one user or undefined
+};
