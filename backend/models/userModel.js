@@ -20,3 +20,11 @@ exports.findUserByEmail = async (email) => {
     );
     return rows[0]; // returns one user or undefined
 };
+
+exports.getUsersFullName = async (user_id) => {
+    const [rows] = await db.query(
+        "SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM users WHERE id = ?",
+        [user_id]
+    );
+    return rows[0].full_name; // returns the full name of the user
+};

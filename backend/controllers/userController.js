@@ -74,3 +74,17 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+exports.getUserFullName = async (req, res) => {
+  try {
+    const userId = req.params.user_id; // Assuming user_id is passed as a URL parameter
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+    const fullName = await userModel.getUsersFullName(userId);
+    res.status(200).json(fullName);
+  } catch (error) {
+    console.error("Error fetching user's full name:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

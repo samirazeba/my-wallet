@@ -9,5 +9,5 @@ router.post("/register", userController.register);
 
 router.post("/login", userController.login);
 
-
+router.get("/getFullName/:user_id", userController.getUserFullName);
 module.exports = router;
