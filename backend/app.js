@@ -14,10 +14,12 @@ app.use(cors({
 
 const userRoutes = require("./routes/api/v1/gen/users");
 const transactionRoutes = require("./routes/api/v1/gen/transactions");
+const savingGoalsRoutes = require("./routes/api/v1/gen/savingGoals");
 
 
 app.use("/api/v1/gen/users", userRoutes);
 app.use("/api/v1/gen/transactions", transactionRoutes);
+app.use("/api/v1/gen/saving-goals", savingGoalsRoutes);
 
 app.listen (3000, ()=> {
     console.log ('Server is running on port 3000');
