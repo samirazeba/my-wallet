@@ -1,6 +1,7 @@
 const userModel = require('../models/userModel');
 const validateRegistrationInput = require('../contracts/registrationValidations');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 exports.getAllUsers = async (req, res) => {
     try {
@@ -57,9 +58,16 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
+    const token = jwt.sign (
+      {id: user.id, email: user.email},
+      process.env.JWT_SECRET || "defaultsecret",
+      {expiresIn: "168h"}// 7days
+    );
+
     // 3. Return success response with basic user info
     res.status(200).json({
       message: "Login successful",
+      token,
       user: {
         id: user.id,
         first_name: user.first_name,

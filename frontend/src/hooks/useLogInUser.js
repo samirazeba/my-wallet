@@ -13,6 +13,10 @@ const useLogInUser = () => {
         try {
             const response = await axios.post("http://localhost:3000/api/v1/gen/users/login", { email, password });
             setUser(response.data.user);
+
+            if (response.data.token) {
+                localStorage.setItem("jwt_token", response.data.token);
+            }
             return response.data;
         } catch (err) {
             setError(err.response ? err.response.data.message : "An error occurred");

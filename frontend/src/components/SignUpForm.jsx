@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import useRegisterUser from "../hooks/useRegisterUser";
 import Logo from "../assets/logo.png";
+import { useNavigate } from "react-router-dom";
 
 const SignUpForm = () => {
   const { user, registerUser, error, loading } = useRegisterUser();
@@ -12,7 +13,10 @@ const SignUpForm = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [success, setSuccess] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
+    
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -38,6 +42,7 @@ const SignUpForm = () => {
       setPassword("");
       setConfirmPassword("");
       console.log("User registered successfully:", response);
+      setTimeout(() => navigate("/login"), 1500);
       // Redirect or perform any other action after successful registration
     } else {
       console.error("Registration failed:", error);
