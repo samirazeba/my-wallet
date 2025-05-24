@@ -50,7 +50,7 @@ const SignUpForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-indigo-100 to-blue-100 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12">
       {success && (
         <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
           <div className="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2">
@@ -70,7 +70,7 @@ const SignUpForm = () => {
             className="h-16 w-16"
           />
         </div>
-        <h2 className="mb-8 text-center text-3xl font-extrabold tracking-tight text-gray-900">
+        <h2 className="mb-8 text-center text-3xl font-extrabold tracking-tight text-gray-700">
           Create your account
         </h2>
         <form onSubmit={handleSubmit} method="POST" className="space-y-6">
@@ -200,7 +200,7 @@ const SignUpForm = () => {
           <div>
             <button
               type="submit"
-              className="flex w-full justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-base font-semibold text-white shadow-md hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition"
+              className="flex w-full justify-center rounded-lg bg-[#b3c7e6] text-gray-700 px-4 py-2.5 text-base font-semibold shadow-md hover:bg-[#9bb6db] transition"
             >
               {loading ? "Loading..." : "Sign Up"}
             </button>
@@ -211,7 +211,7 @@ const SignUpForm = () => {
           Already have an account?{" "}
           <a
             href="/login"
-            className="font-semibold text-indigo-600 hover:text-indigo-500 transition"
+            className="font-semibold text-gray-700 transition"
           >
             Log In
           </a>

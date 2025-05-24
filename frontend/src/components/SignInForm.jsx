@@ -40,16 +40,40 @@ const LogInForm = () => {
         <div className={`fixed top-6 left-1/2 -translate-x-1/2 z-50`}>
           <div
             className={`px-6 py-3 rounded-lg shadow-lg flex items-center gap-2
-              ${toastType === "success" ? "bg-green-500 text-white" : "bg-red-500 text-white"}
+              ${
+                toastType === "success"
+                  ? "bg-green-500 text-white"
+                  : "bg-red-500 text-white"
+              }
             `}
           >
             {toastType === "success" ? (
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              <svg
+                className="w-5 h-5 text-white"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             ) : (
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-5 h-5 text-white"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             )}
             {toastMessage}
@@ -63,7 +87,7 @@ const LogInForm = () => {
           src={Logo}
           className="mx-auto h-20 mt-6 w-auto"
         />
-        <h2 className="mt-6 text-center text-2xl leading-9 font-bold tracking-tight text-gray-900">
+        <h2 className="mt-6 text-center text-2xl leading-9 font-bold tracking-tight text-gray-700">
           LogIn to your account
         </h2>
 
@@ -72,7 +96,7 @@ const LogInForm = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-900"
+                className="block text-sm font-medium text-gray-700"
               >
                 Email address
               </label>
@@ -95,7 +119,7 @@ const LogInForm = () => {
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-900"
+                  className="block text-sm font-medium text-gray-700"
                 >
                   Password
                 </label>
@@ -117,7 +141,7 @@ const LogInForm = () => {
             <div className="text-right">
               <a
                 href="#"
-                className="font-semibold hover:text-[#3949AB] block text-sm font-medium text-gray-900"
+                className="font-semibold hover:text-[#3949AB] block text-sm font-medium text-gray-700"
               >
                 Forgot password?
               </a>
@@ -126,7 +150,7 @@ const LogInForm = () => {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-base font-semibold text-white shadow-md hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition"
+                className="flex w-full justify-center rounded-lg bg-[#b3c7e6] text-gray-700 px-4 py-2.5 text-base font-semibold shadow-md hover:bg-[#9bb6db] transition"
               >
                 {loading ? "Loading..." : "Sign In"}
               </button>
@@ -141,7 +165,7 @@ const LogInForm = () => {
             Don't have an account?{" "}
             <a
               href="/signup"
-              className="font-semibold text-indigo-600 hover:text-indigo-500 transition"
+              className="font-semibold text-gray-700 transition"
             >
               Sign Up
             </a>
