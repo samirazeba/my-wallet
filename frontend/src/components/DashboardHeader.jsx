@@ -1,16 +1,26 @@
 import { useState } from "react";
-import { Divide, Filter } from "lucide-react";
+import { Divide, Filter, X } from "lucide-react";
 import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 
+function getLastMonthRange() {
+  const end = new Date();
+  const start = new Date();
+  start.setMonth(start.getMonth() - 1);
+  return { startDate: start, endDate: end };
+}
+
 export default function DashboardHeader({ onDateChange }) {
   const [selectedAccount, setSelectedAccount] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
+  const [filtered, setFiltered] = useState(false);
+
+  const lastMonth = getLastMonthRange();
   const [dateRange, setDateRange] = useState([
     {
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: lastMonth.startDate,
+      endDate: lastMonth.endDate,
       key: "selection",
     },
   ]);
@@ -18,14 +28,36 @@ export default function DashboardHeader({ onDateChange }) {
   // Call parent handler when date changes
   const handleDateChange = (ranges) => {
     setDateRange([ranges.selection]);
+    if (
+      ranges.selection.startDate &&
+      ranges.selection.endDate &&
+      ranges.selection.startDate.getTime() != ranges.selection.endDate.getTime()
+    ) {
+      setShowCalendar(false);
+      if (onDateChange) {
+        onDateChange(ranges.selection);
+      }
+    }
+  };
+
+  const handleCloseCalendar = () => {
     setShowCalendar(false);
-    if (onDateChange) {
-      onDateChange(ranges.selection);
+    if (!filtered) {
+      setDateRange([
+        {
+          startDate: lastMonth.startDate,
+          endDate: lastMonth.endDate,
+          key: "selection",
+        },
+      ]);
     }
   };
 
   // Format dates for display
   const formatDate = (date) => (date ? date.toLocaleDateString() : "");
+
+  const displayStart = filtered ? dateRange[0].startDate : lastMonth.startDate;
+  const displayEnd = filtered ? dateRange[0].endDate : lastMonth.endDate;
 
   return (
     <div>
@@ -54,7 +86,10 @@ export default function DashboardHeader({ onDateChange }) {
       <div className="ml-8">
         <button
           className="flex items-center text-gray-600 hover:text-gray-800"
-          onClick={() => setShowCalendar(!showCalendar)}
+          onClick={() => {
+            setShowCalendar(!showCalendar);
+            setFiltered(false);
+          }}
         >
           <Filter className="w-5 h-5 mr-1" />
           <span className="text-sm">Filter your time period</span>
@@ -63,14 +98,21 @@ export default function DashboardHeader({ onDateChange }) {
         <div className="w-70 flex flex-col items-center justify-center bg-white p-2 shadow rounded-2xl mb-4 mt-2">
           {dateRange[0].startDate && dateRange[0].endDate && (
             <span className="text-center w-full">
-              Selected: {formatDate(dateRange[0].startDate)} -{" "}
-              {formatDate(dateRange[0].endDate)}
+              Selected: {formatDate(displayStart)} - {formatDate(displayEnd)}
             </span>
           )}
         </div>
 
         {showCalendar && (
-          <div className="absolute z-50 mt-2 right-0">
+          <div className="z-50 mt-2 flex items-start gap-2">
+            <button
+              className="text-gray-500 hover:text-gray-700 bg-white rounded-full p-1 shadow self-start"
+              onClick={handleCloseCalendar}
+              type="button"
+              aria-label="Close calendar"
+            >
+              <X className="w-5 h-5" />
+            </button>
             <DateRange
               editableDateInputs={true}
               onChange={handleDateChange}

@@ -37,13 +37,13 @@ export default function SplashScreen() {
           <div className="mt-10 flex items-center justify-center gap-x-10">
             <a
               href="signup"
-              className="inline-flex justify-center items-center w-60 py-5 rounded-md bg-[#b3c7e6] text-lg font-semibold text-white shadow-sm hover:bg-[#9bb6db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="inline-flex justify-center items-center w-60 py-5 rounded-md bg-[#b3c7e6] text-lg font-semibold text-gray-700 shadow-sm hover:bg-[#9bb6db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Create an Account
             </a>
             <a
               href="/login"
-              className="inline-flex justify-center items-center w-60 py-5 rounded-md bg-[#b3c7e6] text-lg font-semibold text-white shadow-sm hover:bg-[#9bb6db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="inline-flex justify-center items-center w-60 py-5 rounded-md bg-[#b3c7e6] text-lg font-semibold text-gray-700 shadow-sm hover:bg-[#9bb6db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Sign In
             </a>
