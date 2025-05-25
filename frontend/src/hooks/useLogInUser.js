@@ -16,6 +16,7 @@ const useLogInUser = () => {
 
             if (response.data.token) {
                 localStorage.setItem("jwt_token", response.data.token);
+                localStorage.setItem("user_id", response.data.user.id);
             }
             return response.data;
         } catch (err) {

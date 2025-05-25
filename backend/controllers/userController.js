@@ -90,7 +90,11 @@ exports.getUserFullName = async (req, res) => {
       return res.status(400).json({ error: "User ID is required" });
     }
     const fullName = await userModel.getUsersFullName(userId);
-    res.status(200).json(fullName);
+    if (fullName) {
+      res.json({fullName: fullName});
+    } else {
+      res.status(404).json({message: "User not found"});
+    }
   } catch (error) {
     console.error("Error fetching user's full name:", error);
     res.status(500).json({ error: "Internal server error" });

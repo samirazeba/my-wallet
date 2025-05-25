@@ -3,6 +3,7 @@ import { Divide, Filter, X } from "lucide-react";
 import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
+import useUserFullName from "../hooks/useUserFullName";
 
 function getLastMonthRange() {
   const end = new Date();
@@ -12,6 +13,9 @@ function getLastMonthRange() {
 }
 
 export default function DashboardHeader({ onDateChange }) {
+  const userId = localStorage.getItem("user_id");
+  const { fullName, loading, error } = useUserFullName(userId);
+
   const [selectedAccount, setSelectedAccount] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
   const [filtered, setFiltered] = useState(false);
@@ -63,7 +67,11 @@ export default function DashboardHeader({ onDateChange }) {
     <div>
       <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white p-4 shadow rounded-2xl mb-4">
         <div className="flex flex-col mb-4 sm:mb-0">
-          <h1 className="text-2xl font-semibold mb-2">Hello, User</h1>
+          <h1 className="text-2xl font-semibold mb-2">
+            {loading && "Loading..."}
+            {error && "Hello, User"}
+            {!loading && !error && `Hello, ${fullName}`}
+          </h1>
         </div>
 
         <div className="flex flex-col space-y-3">
