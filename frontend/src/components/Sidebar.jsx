@@ -29,7 +29,7 @@ const Sidebar = () => {
               {/* Overview */}
               <a
                 className="flex items-center px-3 py-2 text-gray-700 hover:bg-[#d1d0ce] rounded-lg transition duration-300"
-                href="#"
+                href="/home"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +51,7 @@ const Sidebar = () => {
               {/* Transactions */}
               <a
                 className="flex items-center px-3 py-2 text-gray-700 hover:bg-[#d1d0ce] rounded-lg transition duration-300"
-                href="#"
+                href="/transactions"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

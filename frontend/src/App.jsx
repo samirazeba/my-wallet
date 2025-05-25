@@ -7,6 +7,7 @@ import SplashScreen from './pages/SplashScreen.jsx';
 import Home from './pages/Home.jsx';
 import SignUp from './pages/SignUp.jsx';
 import SignIn from './pages/SingIn.jsx';
+import Transactions from './pages/Transactions.jsx';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<SignIn />} />
+            <Route path="/transactions" element={<Transactions />} />
             {/* Add more routes here */}
           </Routes>
         </div>
