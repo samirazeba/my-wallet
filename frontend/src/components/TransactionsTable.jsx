@@ -1,8 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import useTransactions from "../hooks/useTransactions";
+import useTransactionDetails from "../hooks/useTransactionDetails";
+import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
 
 const TransactionsTable = ({ dateFilter }) => {
   const { transactions, loading, error } = useTransactions(dateFilter);
+  const [selectedId, setSelectedId] = useState(null);
+  const [open, setOpen] = useState(false);
+
+  // Fetch details only when a transaction is selected
+  const { details, loading: detailsLoading, error: detailsError } = useTransactionDetails(selectedId);
+
+  const handleViewDetails = (id) => {
+    setSelectedId(id);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedId(null);
+  };
 
   return (
     <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white p-4 shadow rounded-2xl mb-4">
@@ -70,7 +87,10 @@ const TransactionsTable = ({ dateFilter }) => {
                   <td className="px-4 py-3 border-b border-gray-200">{transaction.created_at}</td>
                   <td className="px-4 py-3 border-b border-gray-200">{transaction.amount}</td>
                   <td className="px-4 py-3 border-b border-gray-200 text-center">
-                    <button className="bg-[#b3c7e6] text-gray-700 font-semibold shadow-sm hover:bg-[#9bb6db] px-3 py-1 rounded text-sm transition">
+                    <button
+                      className="bg-[#b3c7e6] text-gray-700 font-semibold shadow-sm hover:bg-[#9bb6db] px-3 py-1 rounded text-sm transition"
+                      onClick={() => handleViewDetails(transaction.id)}
+                    >
                       View details
                     </button>
                   </td>
@@ -79,6 +99,45 @@ const TransactionsTable = ({ dateFilter }) => {
           </tbody>
         </table>
       </div>
+
+      <Dialog open={open} onClose={handleClose} className="relative z-50">
+        <DialogBackdrop className="fixed inset-0 bg-gray-500/75" />
+        <div className="fixed inset-0 z-50 w-screen overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <DialogPanel className="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+              <div className="bg-white px-6 pt-6 pb-4">
+                <DialogTitle as="h3" className="text-lg font-semibold text-[#3b4a6b] mb-2">
+                  Transaction Details
+                </DialogTitle>
+                {detailsLoading && <div className="py-4 text-center">Loading...</div>}
+                {detailsError && <div className="py-4 text-center text-red-600">{detailsError}</div>}
+                {details && (
+                  <div className="space-y-2">
+                    <div><span className="font-semibold">Name:</span> {details.name}</div>
+                    <div><span className="font-semibold">Category:</span> {details.category_name}</div>
+                    <div><span className="font-semibold">Type:</span> {details.type}</div>
+                    <div><span className="font-semibold">Beneficiary:</span> {details.beneficiary}</div>
+                    <div><span className="font-semibold">Amount:</span> {details.amount}</div>
+                    <div><span className="font-semibold">Date:</span> {details.created_at?.slice(0, 10)}</div>
+                    {details.description && (
+                      <div><span className="font-semibold">Description:</span> {details.description}</div>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className="bg-gray-50 px-6 py-3 flex justify-end">
+                <button
+                  type="button"
+                  onClick={handleClose}
+                  className="inline-flex justify-center rounded-md bg-[#b3c7e6] px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-[#9bb6db]"
+                >
+                  Close
+                </button>
+              </div>
+            </DialogPanel>
+          </div>
+        </div>
+      </Dialog>
     </div>
   );
 };
