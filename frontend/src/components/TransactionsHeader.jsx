@@ -36,7 +36,10 @@ export default function TransactionsHeader({ onDateChange }) {
       setFiltered(true);
       setShowCalendar(false);
       if (onDateChange) {
-        onDateChange(ranges.selection);
+        onDateChange({
+          start: ranges.selection.startDate.toISOString().slice(0, 10),
+          end: ranges.selection.endDate.toISOString().slice(0, 10),
+        });
       }
     }
   };
@@ -102,8 +105,8 @@ export default function TransactionsHeader({ onDateChange }) {
             </span>
           )}
         </div>
-
-        {showCalendar && (
+      </div>
+      {showCalendar && (
           <div className="z-50 mt-2 flex items-start gap-2">
             <button
               className="text-gray-500 hover:text-gray-700 bg-white rounded-full p-1 shadow self-start"
@@ -122,7 +125,6 @@ export default function TransactionsHeader({ onDateChange }) {
             />
           </div>
         )}
-      </div>
     </div>
   );
 }

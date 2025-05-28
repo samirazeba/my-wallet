@@ -13,7 +13,8 @@ export default function SplashScreen() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="bg-white h-screen flex items-center justify-center overflow-hidden">
+    <div className="bg-gradient-to-br from-[#b3c7e6] via-[#e9eafc] to-[#f5f7fa] h-screen flex items-center justify-center overflow-hidden relative">
+      {" "}
       <div className="relative isolate w-full max-w-2xl lg:px-8 flex flex-col items-center justify-center">
         <div
           aria-hidden="true"

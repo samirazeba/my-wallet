@@ -1,39 +1,40 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../../../../controllers/transactionsController');
+const transactionsController = require('../../../../controllers/transactionsController');
+const authenticateToken = require('../../../../middleware/auth');
 
 // Route to get all transactions
-router.get('/all/:userId', userController.getAllTransactions);
+router.get('/all/', authenticateToken, transactionsController.getAllTransactions);
 
 // Route to get dashboard transaction data
-router.get('/dashboard/:userId', userController.getDashboardTransactionData);
+router.get('/dashboard/:userId', transactionsController.getDashboardTransactionData);
 
 // Route to add a new transaction
-router.post('/add', userController.addTransactions);
+router.post('/add', transactionsController.addTransactions);
 
 // Route to view transaction details by ID
-router.get('/view/:id', userController.viewDetailsByTransactionId);
+router.get('/view/:id', transactionsController.viewDetailsByTransactionId);
 
 // Route to get all expenses
-router.get('/all-expenses/:userId', userController.getAllExpenses);
+router.get('/all-expenses/:userId', transactionsController.getAllExpenses);
 
 // Route to get all ubcoming bills
-router.get('/upcoming-bills/:userId', userController.getUpcomingBills);
+router.get('/upcoming-bills/:userId', transactionsController.getUpcomingBills);
 
 // Route to edit an upcoming bill
-router.put('/edit-upcoming-bill/:id', userController.editUpcomingBill);
+router.put('/edit-upcoming-bill/:id', transactionsController.editUpcomingBill);
 
 // Route to add an upcoming bill
-router.post('/add-upcoming-bill', userController.addUpcomingBill);
+router.post('/add-upcoming-bill', transactionsController.addUpcomingBill);
 
 // Route to delete an upcoming bill
-router.delete('/delete-upcoming-bill/:id', userController.deleteBillById);
+router.delete('/delete-upcoming-bill/:id', transactionsController.deleteBillById);
 
 // Route to view bill details by ID 
-router.get('/view-upcoming-bill/:id', userController.viewBillDetailsById);
+router.get('/view-upcoming-bill/:id', transactionsController.viewBillDetailsById);
 
 // Route to view all incomes
-router.get('/all-incomes/:userId', userController.getAllIncomes);
+router.get('/all-incomes/:userId', transactionsController.getAllIncomes);
 
 
 module.exports = router;

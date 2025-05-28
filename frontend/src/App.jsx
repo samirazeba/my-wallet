@@ -8,6 +8,11 @@ import Home from './pages/Home.jsx';
 import SignUp from './pages/SignUp.jsx';
 import SignIn from './pages/SingIn.jsx';
 import Transactions from './pages/Transactions.jsx';
+import Expenses from './pages/Expenses.jsx';
+import UpcomingBills from './pages/UpcomingBills.jsx';
+import Incomes from './pages/Incomes.jsx';
+import Categories from './pages/Categories.jsx';
+import SavingGoals from './pages/SavingGoals.jsx';
 
 function App() {
   return (
@@ -20,6 +25,11 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<SignIn />} />
             <Route path="/transactions" element={<Transactions />} />
+            <Route path="/expenses" element={<Expenses />} />
+            <Route path="/upcoming-bills" element={<UpcomingBills />} />
+            <Route path="/incomes" element={<Incomes />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/saving-goals" element={<SavingGoals />} />
             {/* Add more routes here */}
           </Routes>
         </div>

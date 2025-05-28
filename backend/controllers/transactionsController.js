@@ -2,11 +2,12 @@ const transactionsModel = require("../models/transactionsModel");
 
 exports.getAllTransactions = async (req, res) => {
   try {
-    const { userId } = req.params; // Assuming user_id is passed as a URL parameter
+    const userId = req.user.id; //From token
+    const {start, end} = req.query;
     if (!userId) {
       return res.status(400).json({ error: "User ID is required" });
     }
-    const transactions = await transactionsModel.getAllTransactions(userId);
+    const transactions = await transactionsModel.getAllTransactions(userId, start, end);
     res.status(200).json(transactions);
   } catch (error) {
     console.error("Error fetching transactions:", error);

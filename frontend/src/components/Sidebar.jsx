@@ -73,7 +73,7 @@ const Sidebar = () => {
               {/* Expenses */}
               <a
                 className="flex items-center px-3 py-2 text-gray-700 hover:bg-[#d1d0ce] rounded-lg transition duration-300"
-                href="#"
+                href="/expenses"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -95,7 +95,7 @@ const Sidebar = () => {
               {/* Upcoming Bills */}
               <a
                 className="flex items-center px-3 py-2 text-gray-700 hover:bg-[#d1d0ce] rounded-lg transition duration-300"
-                href="#"
+                href="/upcoming-bills"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -117,7 +117,7 @@ const Sidebar = () => {
               {/* Incomes */}
               <a
                 className="flex items-center px-3 py-2 text-gray-700 hover:bg-[#d1d0ce] rounded-lg transition duration-300"
-                href="#"
+                href="/incomes"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -139,7 +139,7 @@ const Sidebar = () => {
               {/* Categories */}
               <a
                 className="flex items-center px-3 py-2 text-gray-700 hover:bg-[#d1d0ce] rounded-lg transition duration-300"
-                href="#"
+                href="/categories"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -161,7 +161,7 @@ const Sidebar = () => {
               {/* Saving Goals */}
               <a
                 className="flex items-center px-3 py-2 text-gray-700 hover:bg-[#d1d0ce] rounded-lg transition duration-300"
-                href="#"
+                href="/saving-goals"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
