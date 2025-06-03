@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react";
+import useCategories from "../hooks/useCategories";
 
 export default function AddTransactionModal({ open, onClose, onSubmit, loading }) {
+  const categories = useCategories();
   const [form, setForm] = useState({
     bank_account_id: "",
     category_id: "",
@@ -39,7 +41,12 @@ export default function AddTransactionModal({ open, onClose, onSubmit, loading }
                   <option value="Expense">Expense</option>
                   <option value="Income">Income</option>
                 </select>
-                <input name="category_id" value={form.category_id} onChange={handleChange} required placeholder="Category ID" className="w-full border rounded p-2" />
+                <select name="category_id" value={form.category_id} onChange={handleChange} required className="w-full border rounded p-2">
+                  <option value="">Select Category</option>
+                  {categories.map(cat => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))}
+                </select>
                 <input name="bank_account_id" value={form.bank_account_id} onChange={handleChange} required placeholder="Bank Account ID" className="w-full border rounded p-2" />
                 <textarea name="description" value={form.description} onChange={handleChange} placeholder="Description" className="w-full border rounded p-2" />
                 <div className="flex justify-end gap-2 mt-4">
