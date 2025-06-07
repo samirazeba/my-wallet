@@ -52,7 +52,7 @@ const TransactionsTable = ({ dateFilter, selectedAccount }) => {
 
   return (
     <div className="w-full flex flex-col bg-white p-4 shadow rounded-2xl mb-4">
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-start mb-4">
         <button
           className="bg-[#b3c7e6] text-base font-semibold text-gray-700 shadow-sm hover:bg-[#9bb6db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 px-4 py-1.5 rounded transition"
           onClick={handleAddClick}
