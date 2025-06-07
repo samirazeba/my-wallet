@@ -3,11 +3,11 @@ const transactionsModel = require("../models/transactionsModel");
 exports.getAllTransactions = async (req, res) => {
   try {
     const userId = req.user.id; //From token
-    const {start, end} = req.query;
+    const {start, end, bank_account_id} = req.query;
     if (!userId) {
       return res.status(400).json({ error: "User ID is required" });
     }
-    const transactions = await transactionsModel.getAllTransactions(userId, start, end);
+    const transactions = await transactionsModel.getAllTransactions(userId, start, end, bank_account_id);
     res.status(200).json(transactions);
   } catch (error) {
     console.error("Error fetching transactions:", error);

@@ -16,12 +16,14 @@ const userRoutes = require("./routes/api/v1/gen/users");
 const transactionRoutes = require("./routes/api/v1/gen/transactions");
 const savingGoalsRoutes = require("./routes/api/v1/gen/savingGoals");
 const categoriesRoutes = require("./routes/api/v1/gen/categories");
+const bankAccountsRoutes = require("./routes/api/v1/gen/bankAccounts");
 
 
 app.use("/api/v1/gen/users", userRoutes);
 app.use("/api/v1/gen/transactions", transactionRoutes);
 app.use("/api/v1/gen/saving-goals", savingGoalsRoutes);
 app.use("/api/v1/gen/categories", categoriesRoutes);
+app.use("/api/v1/gen/bank-accounts", bankAccountsRoutes);
 
 app.listen (3000, ()=> {
     console.log ('Server is running on port 3000');

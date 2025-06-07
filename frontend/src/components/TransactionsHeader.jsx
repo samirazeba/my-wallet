@@ -5,6 +5,8 @@ import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 
+import useBankAccounts from "../hooks/useBankAccounts";
+
 function getLastMonthRange() {
   const end = new Date();
   const start = new Date();
@@ -12,10 +14,12 @@ function getLastMonthRange() {
   return { startDate: start, endDate: end };
 }
 
-export default function TransactionsHeader({ onDateChange }) {
-  const [selectedAccount, setSelectedAccount] = useState("");
+export default function TransactionsHeader({ onDateChange, selectedAccount, onAccountChange}) {
+  //const [selectedAccount, setSelectedAccount] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
   const [filtered, setFiltered] = useState(false);
+
+  const accounts = useBankAccounts();
 
   const lastMonth = getLastMonthRange();
   const [dateRange, setDateRange] = useState([
@@ -36,9 +40,11 @@ export default function TransactionsHeader({ onDateChange }) {
       setFiltered(true);
       setShowCalendar(false);
       if (onDateChange) {
+        const endDate = new Date(ranges.selection.endDate);
+        endDate.setDate(endDate.getDate() + 1);
         onDateChange({
           start: ranges.selection.startDate.toISOString().slice(0, 10),
-          end: ranges.selection.endDate.toISOString().slice(0, 10),
+          end: endDate.toISOString().slice(0, 10),
         });
       }
     }
@@ -76,13 +82,15 @@ export default function TransactionsHeader({ onDateChange }) {
           <select
             id="bankAccount"
             value={selectedAccount}
-            onChange={(e) => setSelectedAccount(e.target.value)}
+            onChange={(e) => onAccountChange(e.target.value)}
             className="border rounded-lg p-1.5 text-sm focus:outline-none focus:ring focus:border-blue-300 w-55"
           >
             <option value="">Select your bank account</option>
-            <option value="account1">Account 1</option>
-            <option value="account2">Account 2</option>
-            <option value="account3">Account 3</option>
+            {accounts.map((acc) => (
+              <option key={acc.id} value={acc.id}>
+                {acc.bank_name} - {acc.account_number}
+              </option>
+            ))}
           </select>
         </div>
       </div>
@@ -107,24 +115,24 @@ export default function TransactionsHeader({ onDateChange }) {
         </div>
       </div>
       {showCalendar && (
-          <div className="z-50 mt-2 flex items-start gap-2">
-            <button
-              className="text-gray-500 hover:text-gray-700 bg-white rounded-full p-1 shadow self-start"
-              onClick={handleCloseCalendar}
-              type="button"
-              aria-label="Close calendar"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <DateRange
-              editableDateInputs={true}
-              onChange={handleDateChange}
-              moveRangeOnFirstSelection={false}
-              ranges={dateRange}
-              maxDate={new Date()}
-            />
-          </div>
-        )}
+        <div className="z-50 mt-2 flex items-start gap-2">
+          <button
+            className="text-gray-500 hover:text-gray-700 bg-white rounded-full p-1 shadow self-start"
+            onClick={handleCloseCalendar}
+            type="button"
+            aria-label="Close calendar"
+          >
+            <X className="w-5 h-5" />
+          </button>
+          <DateRange
+            editableDateInputs={true}
+            onChange={handleDateChange}
+            moveRangeOnFirstSelection={false}
+            ranges={dateRange}
+            maxDate={new Date()}
+          />
+        </div>
+      )}
     </div>
   );
 }

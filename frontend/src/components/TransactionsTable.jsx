@@ -10,8 +10,8 @@ import {
 import AddTransactionModal from "./AddTransactionModal";
 import useAddTransaction from "../hooks/useAddTransaction";
 
-const TransactionsTable = ({ dateFilter }) => {
-  const { transactions, loading, error } = useTransactions(dateFilter);
+const TransactionsTable = ({ dateFilter, selectedAccount }) => {
+  const { transactions, loading, error } = useTransactions(dateFilter, selectedAccount);
   const [selectedId, setSelectedId] = useState(null);
   const [open, setOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);

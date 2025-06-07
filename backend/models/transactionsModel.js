@@ -1,12 +1,16 @@
 const db = require("../config/db");
 
-exports.getAllTransactions = async (user_id, start, end) => {
+exports.getAllTransactions = async (user_id, start, end, bank_account_id) => {
     let query = "SELECT t.*, c.name AS category_name FROM transactions t JOIN categories c ON t.category_id = c.id WHERE t.user_id = ?";
     const params = [user_id];
 
     if (start && end) {
         query += " AND DATE(t.created_at) BETWEEN ? AND ?";
         params.push(start, end);
+    }
+    if (bank_account_id) {
+        query += " AND t.bank_account_id = ?";
+        params.push(bank_account_id);
     }
 
     const [rows] = await db.query(query, params);
