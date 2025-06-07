@@ -91,12 +91,13 @@ exports.viewDetailsByTransactionId = async (req, res) => {
 
 exports.getAllExpenses = async (req, res) => {
   try {
-    const { userId } = req.params; // Assuming user_id is passed as a URL parameter
+    const { userId } = req.params;
+    const { start, end, bank_account_id } = req.query;
     if (!userId) {
       return res.status(400).json({ error: "User ID is required" });
     }
-    const transactions = await transactionsModel.getAllExpenses(userId);
-    res.status(200).json(transactions);
+    const expenses = await transactionsModel.getAllExpenses(userId, start, end, bank_account_id);
+    res.status(200).json(expenses);
   } catch (error) {
     console.error("Error fetching transactions:", error);
     res.status(500).json({ error: "Internal server error" });

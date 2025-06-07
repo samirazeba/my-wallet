@@ -24,6 +24,19 @@ export default function DateFilter({ onDateChange }) {
     },
   ]);
 
+  // Call this on mount to set initial filter
+  React.useEffect(() => {
+    if (onDateChange) {
+      const endDate = new Date(lastMonth.endDate);
+      endDate.setDate(endDate.getDate() + 1);
+      onDateChange({
+        start: lastMonth.startDate.toISOString().slice(0, 10),
+        end: endDate.toISOString().slice(0, 10),
+      });
+    }
+    // eslint-disable-next-line
+  }, []);
+
   const handleDateChange = (ranges) => {
     setDateRange([ranges.selection]);
     if (
@@ -59,6 +72,27 @@ export default function DateFilter({ onDateChange }) {
     }
   };
 
+  // NEW: Clear filter handler
+  const handleClearFilter = () => {
+    setDateRange([
+      {
+        startDate: lastMonth.startDate,
+        endDate: lastMonth.endDate,
+        key: "selection",
+      },
+    ]);
+    setFiltered(false);
+    setShowCalendar(false);
+    if (onDateChange) {
+      const endDate = new Date(lastMonth.endDate);
+      endDate.setDate(endDate.getDate() + 1);
+      onDateChange({
+        start: lastMonth.startDate.toISOString().slice(0, 10),
+        end: endDate.toISOString().slice(0, 10),
+      });
+    }
+  };
+
   const formatDate = (date) => (date ? date.toLocaleDateString() : "");
 
   const displayStart = filtered ? dateRange[0].startDate : lastMonth.startDate;
@@ -84,6 +118,13 @@ export default function DateFilter({ onDateChange }) {
             </span>
           )}
         </div>
+        {/* Clear Filter Button */}
+        <button
+          className="ml-4 px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm text-gray-700"
+          onClick={handleClearFilter}
+        >
+          Clear Filter
+        </button>
       </div>
       {showCalendar && (
         <div className="z-50 mt-2 flex flex-col items-start gap-2">
