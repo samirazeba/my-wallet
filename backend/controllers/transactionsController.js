@@ -92,11 +92,11 @@ exports.viewDetailsByTransactionId = async (req, res) => {
 exports.getAllExpenses = async (req, res) => {
   try {
     const { userId } = req.params;
-    const { start, end, bank_account_id } = req.query;
+    const { start, end, bank_account_id, sort_by, sort_order } = req.query;
     if (!userId) {
       return res.status(400).json({ error: "User ID is required" });
     }
-    const expenses = await transactionsModel.getAllExpenses(userId, start, end, bank_account_id);
+    const expenses = await transactionsModel.getAllExpenses(userId, start, end, bank_account_id, sort_by, sort_order);
     res.status(200).json(expenses);
   } catch (error) {
     console.error("Error fetching transactions:", error);

@@ -126,25 +126,27 @@ export default function DateFilter({ onDateChange }) {
           Clear Filter
         </button>
       </div>
-      {showCalendar && (
-        <div className="z-50 mt-2 flex flex-col items-start gap-2">
-          <button
-            className="text-gray-500 hover:text-gray-700 bg-white rounded-full p-1 shadow self-start"
-            onClick={handleCloseCalendar}
-            type="button"
-            aria-label="Close calendar"
-          >
-            <X className="w-5 h-5" />
-          </button>
-          <DateRange
-            editableDateInputs={true}
-            onChange={handleDateChange}
-            moveRangeOnFirstSelection={false}
-            ranges={dateRange}
-            maxDate={new Date()}
-          />
-        </div>
-      )}
+      <div className="relative inline-block">
+        {showCalendar && (
+          <div className="absolute left-0 mt-2 z-50 flex flex-col items-start gap-2">
+            <button
+              className="text-gray-500 hover:text-gray-700 bg-white rounded-full p-1 shadow self-start"
+              onClick={handleCloseCalendar}
+              type="button"
+              aria-label="Close calendar"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <DateRange
+              editableDateInputs={true}
+              onChange={handleDateChange}
+              moveRangeOnFirstSelection={false}
+              ranges={dateRange}
+              maxDate={new Date()}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

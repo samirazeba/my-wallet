@@ -8,8 +8,8 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 
-const ExpensesTable = ({ dateFilter, selectedAccount }) => {
-  const { expenses, loading, error } = useExpenses(dateFilter, selectedAccount);
+const ExpensesTable = ({ dateFilter, selectedAccount, sortBy, sortOrder }) => {
+  const { expenses, loading, error } = useExpenses(dateFilter, selectedAccount, sortBy, sortOrder);
   const [selectedId, setSelectedId] = useState(null);
   const [open, setOpen] = useState(false);
 

@@ -1,8 +1,16 @@
 import React from "react";
 import AccountSelector from "./AccountSelector";
 import DateFilter from "./DateFilter";
+import SortSelector from "./SortSelector";
 
-export default function ExpensesHeader({ selectedAccount, onAccountChange, onDateChange }) {
+export default function ExpensesHeader({
+  selectedAccount,
+  onAccountChange,
+  onDateChange,
+  sortBy,
+  sortOrder,
+  onSortChange,
+}) {
   return (
     <>
       <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white p-4 shadow rounded-2xl mb-4">
@@ -11,7 +19,19 @@ export default function ExpensesHeader({ selectedAccount, onAccountChange, onDat
         </div>
         <AccountSelector selectedAccount={selectedAccount} onChange={onAccountChange} />
       </div>
-      <DateFilter onDateChange={onDateChange} />
+      {/* Filter left, SortSelector right with right margin */}
+      <div className="w-full flex flex-row items-center justify-between mb-4">
+        <div>
+          <DateFilter onDateChange={onDateChange} />
+        </div>
+        <div className="mr-8">
+          <SortSelector
+            sortBy={sortBy}
+            sortOrder={sortOrder}
+            onSortChange={onSortChange}
+          />
+        </div>
+      </div>
     </>
   );
 }
