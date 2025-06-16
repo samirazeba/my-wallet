@@ -137,3 +137,6 @@ dist
 
 # DB credentials
 backend/config/db.js
+
+#DB
+backend/my_wallet.sql
