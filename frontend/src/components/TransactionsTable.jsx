@@ -62,9 +62,10 @@ const TransactionsTable = ({ dateFilter, selectedAccount }) => {
       </div>
       <AddTransactionModal
         open={addOpen}
-        onClose={handleAddClose}
+        onClose={() => setAddOpen(false)}
         onSubmit={handleAddSubmit}
         loading={addLoading}
+        defaultBankAccountId={selectedAccount}
       />
       {addError && (
         <div className="text-red-600 text-center mb-2">{addError}</div>

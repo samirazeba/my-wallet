@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react";
 import useCategories from "../hooks/useCategories";
+import useBankAccounts from "../hooks/useBankAccounts";
 
-export default function AddTransactionModal({ open, onClose, onSubmit, loading }) {
+export default function AddTransactionModal({ open, onClose, onSubmit, loading, defaultBankAccountId }) {
   const categories = useCategories();
+  const accounts = useBankAccounts();
+
+  // Set initial form state, using defaultBankAccountId if provided
   const [form, setForm] = useState({
-    bank_account_id: "",
+    bank_account_id: defaultBankAccountId || "",
     category_id: "",
     name: "",
     beneficiary: "",
@@ -13,6 +17,14 @@ export default function AddTransactionModal({ open, onClose, onSubmit, loading }
     type: "Expense",
     description: "",
   });
+
+  // If defaultBankAccountId changes (e.g., user selects a different account in header), update form
+  useEffect(() => {
+    setForm((prev) => ({
+      ...prev,
+      bank_account_id: defaultBankAccountId || "",
+    }));
+  }, [defaultBankAccountId, open]); // also reset when modal opens
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -47,7 +59,21 @@ export default function AddTransactionModal({ open, onClose, onSubmit, loading }
                     <option key={cat.id} value={cat.id}>{cat.name}</option>
                   ))}
                 </select>
-                <input name="bank_account_id" value={form.bank_account_id} onChange={handleChange} required placeholder="Bank Account ID" className="w-full border rounded p-2" />
+                {/* Bank Account Selector */}
+                <select
+                  name="bank_account_id"
+                  value={form.bank_account_id}
+                  onChange={handleChange}
+                  required
+                  className="w-full border rounded p-2"
+                >
+                  <option value="">Select your bank account</option>
+                  {accounts.map(acc => (
+                    <option key={acc.id} value={acc.id}>
+                      {acc.bank_name} - {acc.account_number}
+                    </option>
+                  ))}
+                </select>
                 <textarea name="description" value={form.description} onChange={handleChange} placeholder="Description" className="w-full border rounded p-2" />
                 <div className="flex justify-end gap-2 mt-4">
                   <button type="button" onClick={onClose} className="rounded-md bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300">

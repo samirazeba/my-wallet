@@ -96,11 +96,40 @@ exports.getAllExpenses = async (
   return rows;
 };
 
-exports.getUpcomingBills = async (user_id) => {
-  const [rows] = await db.query(
-    "SELECT a.name, c.name AS category_name, a.last_executed, a.amount FROM automations a JOIN categories c on c.id = a.category_id WHERE a.user_id = ?",
-    [user_id]
-  );
+exports.getUpcomingBills = async (
+  user_id,
+  bank_account_id,
+  sort_by,
+  sort_order
+) => {
+  let query = `
+    SELECT a.*, c.name AS category_name 
+    FROM automations a 
+    JOIN categories c ON a.category_id = c.id 
+    WHERE a.user_id = ?
+  `;
+  const params = [user_id];
+
+  if (bank_account_id) {
+    query += " AND a.bank_account_id = ?";
+    params.push(bank_account_id);
+  }
+
+  // Default sort
+  let sortBy = "a.last_executed";
+  let sortOrder = "ASC";
+  if (sort_by) {
+    // Whitelist allowed columns
+    if (["last_executed", "amount", "name"].includes(sort_by)) {
+      sortBy = `a.${sort_by}`;
+    }
+  }
+  if (sort_order && ["asc", "desc"].includes(sort_order.toLowerCase())) {
+    sortOrder = sort_order.toUpperCase();
+  }
+  query += ` ORDER BY ${sortBy} ${sortOrder}`;
+
+  const [rows] = await db.query(query, params);
   return rows;
 };
 

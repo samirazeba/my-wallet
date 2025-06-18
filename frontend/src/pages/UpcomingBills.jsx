@@ -1,16 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import UpcomingBillsHeader from "../components/UpcomingBillsHeader";
+import UpcomingBillsList from "../components/UpcomingBillsList";
+import useUpcomingBills from "../hooks/useUpcomingBills";
 
 const UpcomingBills = () => {
-    return (
-        <div className="flex bg-gray-50 min-h-screen">
-            <Sidebar />
-            <div className="flex-1 p-6">
-                <UpcomingBillsHeader />
-            </div>
-        </div>
-    );
+  const [selectedAccount, setSelectedAccount] = useState("");
+  const [dateFilter, setDateFilter] = useState(null); // <-- Add this
+  const [sortBy, setSortBy] = useState("last_executed");
+  const [sortOrder, setSortOrder] = useState("asc");
+
+  const handleSortChange = (by, order) => {
+    setSortBy(by);
+    setSortOrder(order);
+  };
+
+  const { bills, loading, error } = useUpcomingBills(
+    selectedAccount,
+    dateFilter,
+    sortBy,
+    sortOrder
+  );
+
+  return (
+    <div className="flex bg-gray-50 min-h-screen">
+      <Sidebar />
+      <div className="flex-1 p-6">
+        <UpcomingBillsHeader
+          selectedAccount={selectedAccount}
+          onAccountChange={setSelectedAccount}
+          onDateChange={setDateFilter} // <-- Pass handler
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onSortChange={handleSortChange}
+        />
+        <UpcomingBillsList bills={bills} loading={loading} error={error} />
+      </div>
+    </div>
+  );
 };
 
 export default UpcomingBills;

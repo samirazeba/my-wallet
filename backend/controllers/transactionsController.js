@@ -106,14 +106,20 @@ exports.getAllExpenses = async (req, res) => {
 
 exports.getUpcomingBills = async (req, res) => {
   try {
-    const { userId } = req.params; // Assuming user_id is passed as a URL parameter
+    const { userId } = req.params;
+    const { bank_account_id, sort_by, sort_order } = req.query;
     if (!userId) {
-      return res.status(400).json({ error: "User ID is required" });
+      return res.status(400).json({ error: "User ID required" });
     }
-    const transactions = await transactionsModel.getUpcomingBills(userId);
-    res.status(200).json(transactions);
+    const bills = await transactionsModel.getUpcomingBills(
+      userId,
+      bank_account_id,
+      sort_by,
+      sort_order
+    );
+    res.status(200).json(bills);
   } catch (error) {
-    console.error("Error fetching transactions:", error);
+    console.error("Error fetching upcoming bills:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
