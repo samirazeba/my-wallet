@@ -143,6 +143,7 @@ exports.editUpcomingBillDynamic = async (setClause, params) => {
 
 exports.addUpcomingBill = async (
   user_id,
+  bank_account_id,
   category_id,
   name,
   beneficiary,
@@ -156,9 +157,10 @@ exports.addUpcomingBill = async (
   active
 ) => {
   const [rows] = await db.query(
-    "INSERT INTO automations (user_id, category_id, name, beneficiary, amount, type, repeat_every, repeat_unit, next_execution_date, last_executed, description, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    "INSERT INTO automations (user_id, bank_account_id, category_id, name, beneficiary, amount, type, repeat_every, repeat_unit, next_execution_date, last_executed, description, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     [
       user_id,
+      bank_account_id,
       category_id,
       name,
       beneficiary,

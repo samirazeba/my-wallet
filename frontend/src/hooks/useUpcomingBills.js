@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../api/axiosInstance";
 
-export default function useUpcomingBills(selectedAccount, dateFilter, sortBy, sortOrder) {
+export default function useUpcomingBills(selectedAccount, dateFilter, sortBy, sortOrder, refreshFlag) {
   const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -34,7 +34,7 @@ export default function useUpcomingBills(selectedAccount, dateFilter, sortBy, so
       .then((res) => setBills(res.data))
       .catch((err) => setError(err.response?.data?.error || "Error fetching bills"))
       .finally(() => setLoading(false));
-  }, [selectedAccount, dateFilter, sortBy, sortOrder]);
+  }, [selectedAccount, dateFilter, sortBy, sortOrder, refreshFlag]);
 
   return { bills, loading, error };
 }

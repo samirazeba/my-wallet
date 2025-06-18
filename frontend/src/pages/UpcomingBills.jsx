@@ -9,6 +9,7 @@ const UpcomingBills = () => {
   const [dateFilter, setDateFilter] = useState(null); // <-- Add this
   const [sortBy, setSortBy] = useState("last_executed");
   const [sortOrder, setSortOrder] = useState("asc");
+  const [refreshFlag, setRefreshFlag] = useState(false);
 
   const handleSortChange = (by, order) => {
     setSortBy(by);
@@ -19,8 +20,11 @@ const UpcomingBills = () => {
     selectedAccount,
     dateFilter,
     sortBy,
-    sortOrder
+    sortOrder,
+    refreshFlag
   );
+
+  const handleRefresh = () => setRefreshFlag((f) => !f)
 
   return (
     <div className="flex bg-gray-50 min-h-screen">
@@ -34,7 +38,7 @@ const UpcomingBills = () => {
           sortOrder={sortOrder}
           onSortChange={handleSortChange}
         />
-        <UpcomingBillsList bills={bills} loading={loading} error={error} />
+        <UpcomingBillsList bills={bills} loading={loading} error={error} onRefresh={handleRefresh} selectedAccount={selectedAccount}/>
       </div>
     </div>
   );
