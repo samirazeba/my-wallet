@@ -120,6 +120,7 @@ export default function UpcomingBillsList({
         onSubmit={handleAddBill}
         loading={addLoading}
         userId={localStorage.getItem("user_id")}
+        defaultBankAccountId={selectedAccount}
       />
       {bills.map((bill) => (
         <div
