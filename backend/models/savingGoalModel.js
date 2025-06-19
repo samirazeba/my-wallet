@@ -41,11 +41,14 @@ exports.deleteSavingGoal = async (id) => {
   return rows;
 };
 
-exports.getSavingGoalsByUserId = async (user_id) => {
-  const [rows] = await db.query(
-    "SELECT * FROM saving_goals WHERE user_id = ? AND is_deleted = 0",
-    [user_id]
-  );
+exports.getSavingGoalsByUserId = async (user_id, start, end) => {
+  let query = "SELECT * FROM saving_goals WHERE user_id = ? AND is_deleted = 0";
+  const params = [user_id];
+  if (start && end) {
+    query += " AND DATE(created_at) BETWEEN ? AND ?";
+    params.push(start, end);
+  }
+  const [rows] = await db.query(query, params);
   return rows;
 };
 
@@ -83,5 +86,16 @@ exports.addSavingGoalHistory = async ({
 
 exports.softDeleteSavingGoal = async (id) => {
   const [rows] = await db.query("UPDATE saving_goals SET is_deleted = 1 WHERE id = ?", [id]);
+  return rows;
+};
+
+exports.getSavingGoalsHistoryByUserId = async (user_id, start, end) => {
+  let query = "SELECT * FROM saving_goals_history WHERE user_id = ?";
+  const params = [user_id];
+  if (start && end) {
+    query += " AND DATE(updated_at) BETWEEN ? AND ?";
+    params.push(start, end);
+  }
+  const [rows] = await db.query(query, params);
   return rows;
 };

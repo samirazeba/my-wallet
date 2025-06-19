@@ -5,6 +5,8 @@ import EditSavingGoalModal from "./EditSavingGoalModal";
 import useDeleteSavingGoal from "../hooks/useDeleteSavingGoal";
 import useAddSavingGoal from "../hooks/useAddSavingGoal";
 import useEditSavingGoal from "../hooks/useEditSavingGoal";
+import { useNavigate } from "react-router-dom";
+import { History } from "lucide-react";
 
 export default function SavingGoalsList({ goals, loading, error, onRefresh }) {
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -12,6 +14,7 @@ export default function SavingGoalsList({ goals, loading, error, onRefresh }) {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedGoal, setSelectedGoal] = useState(null);
+  const navigate = useNavigate();
 
   const { deleteSavingGoal, loading: deleteLoading } = useDeleteSavingGoal();
   const { addSavingGoal, loading: addLoading } = useAddSavingGoal();
@@ -61,12 +64,22 @@ export default function SavingGoalsList({ goals, loading, error, onRefresh }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-start mb-4">
+      <div className="flex items-center justify-between mb-2 ml-8">
+        {/* Left: Add Saving Goal button */}
         <button
-          className="bg-[#b3c7e6] text-base font-semibold text-gray-700 shadow-sm hover:bg-[#9bb6db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 px-4 py-1.5 rounded transition"
+          className="bg-[#b3c7e6] text-base font-semibold text-gray-700 shadow-sm hover:bg-[#9bb6db] px-4 py-1.5 rounded transition"
           onClick={() => setAddModalOpen(true)}
         >
           Add Saving Goal
+        </button>
+        {/* Right: History icon button */}
+        <button
+          className="mr-8 p-2 rounded-full bg-gray-200 hover:bg-gray-300"
+          title="View History"
+          onClick={() => navigate("/saving-goals-history")}
+        >
+          {/* Use an available icon, e.g. FaHistory from react-icons */}
+          <History className="w-5 h-5 text-gray-700" />
         </button>
       </div>
       <AddSavingGoalModal

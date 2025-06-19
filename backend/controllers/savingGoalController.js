@@ -1,15 +1,25 @@
-const savingGoalModel = require('../models/savingGoalModel');
-const aiService = require('../services/aiServices');
+const savingGoalModel = require("../models/savingGoalModel");
+const aiService = require("../services/aiServices");
 
 exports.addSavingGoal = async (req, res) => {
-  const { user_id, name, target_amount, target_date, goal_description } = req.body;
+  const { user_id, name, target_amount, target_date, goal_description } =
+    req.body;
   try {
     // 1. Generate AI response
-    const ai_response = await aiService.generateAIResponse(goal_description, target_amount, target_date);
+    const ai_response = await aiService.generateAIResponse(
+      goal_description,
+      target_amount,
+      target_date
+    );
 
     // 2. Save the goal with the AI response
     const result = await savingGoalModel.addSavingGoal(
-      user_id, name, target_amount, target_date, goal_description, ai_response
+      user_id,
+      name,
+      target_amount,
+      target_date,
+      goal_description,
+      ai_response
     );
 
     // 3. Save to history (old and new are the same)
@@ -26,10 +36,10 @@ exports.addSavingGoal = async (req, res) => {
       new_ai_response: ai_response,
     });
 
-    res.status(201).json({ 
-      message: "Saving goal added", 
+    res.status(201).json({
+      message: "Saving goal added",
       goalId: result.insertId,
-      ai_response 
+      ai_response,
     });
   } catch (error) {
     console.error("Add goal error:", error);
@@ -44,7 +54,7 @@ exports.editSavingGoal = async (req, res) => {
       "name",
       "target_amount",
       "target_date",
-      "goal_description"
+      "goal_description",
     ];
 
     // 1. Fetch existing goal
@@ -67,12 +77,18 @@ exports.editSavingGoal = async (req, res) => {
 
     // 3. For AI, use merged values
     const name = fieldsToUpdate.name ?? existingGoal.name;
-    const goal_description = fieldsToUpdate.goal_description ?? existingGoal.goal_description;
-    const target_amount = fieldsToUpdate.target_amount ?? existingGoal.target_amount;
+    const goal_description =
+      fieldsToUpdate.goal_description ?? existingGoal.goal_description;
+    const target_amount =
+      fieldsToUpdate.target_amount ?? existingGoal.target_amount;
     const target_date = fieldsToUpdate.target_date ?? existingGoal.target_date;
 
     // 4. Generate new AI response
-    const ai_response = await aiService.generateAIResponse(goal_description, target_amount, target_date);
+    const ai_response = await aiService.generateAIResponse(
+      goal_description,
+      target_amount,
+      target_date
+    );
 
     // 5. Update the existing saving goal
     await savingGoalModel.editSavingGoal(id, {
@@ -80,7 +96,7 @@ exports.editSavingGoal = async (req, res) => {
       target_amount,
       target_date,
       goal_description,
-      ai_response
+      ai_response,
     });
 
     // 6. Save to history (old and new values)
@@ -100,7 +116,7 @@ exports.editSavingGoal = async (req, res) => {
     res.status(200).json({
       message: "Saving goal updated successfully",
       ai_response,
-      updated_goal_id: id
+      updated_goal_id: id,
     });
   } catch (error) {
     console.error("Update goal error:", error);
@@ -125,15 +141,43 @@ exports.deleteSavingGoal = async (req, res) => {
 };
 
 exports.getSavingGoalsByUserId = async (req, res) => {
-    try{
-        const {user_id} = req.params;
-        const savingGoals = await savingGoalModel.getSavingGoalsByUserId(user_id);
-        if (savingGoals.length === 0) {
-            return res.status(404).json({ message: "No saving goals found for this user" });
-        }
-        res.status(200).json({ savingGoals });
-    } catch (error) {
-        console.error("Get saving goals error: ", error);
-        res.status(500).json({ message: "Error fetching saving goals" });
+  try {
+    const { user_id } = req.params;
+    const { start, end } = req.query;
+    const savingGoals = await savingGoalModel.getSavingGoalsByUserId(
+      user_id,
+      start,
+      end
+    );
+    if (savingGoals.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No saving goals found for this user" });
     }
+    res.status(200).json({ savingGoals });
+  } catch (error) {
+    console.error("Get saving goals error: ", error);
+    res.status(500).json({ message: "Error fetching saving goals" });
+  }
+};
+
+exports.getSavingGoalsHistoryByUserId = async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const { start, end } = req.query;
+    const savingGoals = await savingGoalModel.getSavingGoalsHistoryByUserId(
+      user_id,
+      start,
+      end
+    );
+    if (savingGoals.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No saving goals history found for this user" });
+    }
+    res.status(200).json({ savingGoals });
+  } catch (error) {
+    console.error("Get saving goals error: ", error);
+    res.status(500).json({ message: "Error fetching saving goals" });
+  }
 };

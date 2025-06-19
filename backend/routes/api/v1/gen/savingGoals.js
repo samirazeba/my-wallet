@@ -10,4 +10,6 @@ router.put("/edit/:id", savingGoalController.editSavingGoal);
 router.delete("/delete/:id", savingGoalController.deleteSavingGoal);
 
 router.get("/get-by-user-id/:user_id", savingGoalController.getSavingGoalsByUserId);
+
+router.get("/get-history-by-user-id/:user_id", savingGoalController.getSavingGoalsHistoryByUserId);
 module.exports = router;

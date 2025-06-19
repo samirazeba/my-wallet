@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../api/axiosInstance";
 
-export default function useSavingGoals(userId, sortBy, sortOrder, refreshFlag) {
+export default function useSavingGoals(
+  userId,
+  sortBy,
+  sortOrder,
+  refreshFlag,
+  dateFilter
+) {
   const [goals, setGoals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,7 +17,12 @@ export default function useSavingGoals(userId, sortBy, sortOrder, refreshFlag) {
     setLoading(true);
     setError(null);
     axiosInstance
-      .get(`/saving-goals/get-by-user-id/${userId}`)
+      .get(`/saving-goals/get-by-user-id/${userId}`, {
+        params:
+          dateFilter && dateFilter.start && dateFilter.end
+            ? { start: dateFilter.start, end: dateFilter.end }
+            : {},
+      })
       .then((res) => {
         let data = res.data.savingGoals || [];
         if (sortBy) {
@@ -33,7 +44,6 @@ export default function useSavingGoals(userId, sortBy, sortOrder, refreshFlag) {
         setLoading(false);
       })
       .catch((err) => {
-        // If 404 and message is "No saving goals found for this user", treat as empty list
         if (
           err.response &&
           err.response.status === 404 &&
@@ -46,6 +56,7 @@ export default function useSavingGoals(userId, sortBy, sortOrder, refreshFlag) {
         }
         setLoading(false);
       });
-  }, [userId, sortBy, sortOrder, refreshFlag]);
+  }, [userId, sortBy, sortOrder, refreshFlag, dateFilter]);
+
   return { goals, loading, error };
 }
