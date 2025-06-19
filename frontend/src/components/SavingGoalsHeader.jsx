@@ -1,8 +1,16 @@
 import React from "react";
 import AccountSelector from "./AccountSelector";
 import DateFilter from "./DateFilter";
+import SortSelector from "./SortSelector";
 
-export default function SavingGoalsHeader({ selectedAccount, onAccountChange, onDateChange }) {
+export default function SavingGoalsHeader({
+  selectedAccount,
+  onAccountChange,
+  onDateChange,
+  sortBy,
+  sortOrder,
+  onSortChange,
+}) {
   return (
     <>
       {/* Header box: title and account selector */}
@@ -12,8 +20,11 @@ export default function SavingGoalsHeader({ selectedAccount, onAccountChange, on
         </div>
         <AccountSelector selectedAccount={selectedAccount} onChange={onAccountChange} />
       </div>
-      {/* Date filter below the header box */}
-      <DateFilter onDateChange={onDateChange} />
+      {/* Date filter and sort selector in one row */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
+        <DateFilter onDateChange={onDateChange} />
+        <SortSelector sortBy={sortBy} sortOrder={sortOrder} onSortChange={onSortChange} />
+      </div>
     </>
   );
 }

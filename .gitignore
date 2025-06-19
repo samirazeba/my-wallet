@@ -140,3 +140,6 @@ backend/config/db.js
 
 #DB
 backend/my_wallet.sql
+
+frontend/src/assets/upcoming_bills.png
+frontend/src/assets/saving_goals_list.png

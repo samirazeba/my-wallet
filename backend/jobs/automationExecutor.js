@@ -61,6 +61,6 @@ async function executeAutomations() {
   }
 }
 
-cron.schedule("0 14 * * *", executeAutomations);
+cron.schedule("15 15 * * *", executeAutomations);
 
 module.exports = {executeAutomations};
