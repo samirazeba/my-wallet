@@ -23,11 +23,11 @@ export default function SavingGoalsHistoryList({ history, loading, error }) {
               <span className="text-gray-900">{item.name}</span>
             </div>
             <div>
-              <span className="font-semibold text-gray-700">Old Target: </span>
+              <span className="font-semibold text-gray-700">Target Date: </span>
               <span className="text-gray-900">{item.old_target_amount}</span>
             </div>
             <div>
-              <span className="font-semibold text-gray-700">Old Target Date: </span>
+              <span className="font-semibold text-gray-700">Target Date: </span>
               <span className="text-gray-900">
                 {item.old_target_date
                   ? new Date(item.old_target_date).toLocaleDateString()
@@ -37,11 +37,11 @@ export default function SavingGoalsHistoryList({ history, loading, error }) {
           </div>
           <hr className="my-2 border-gray-200" />
           <div>
-            <span className="font-semibold text-gray-700">Old Description: </span>
+            <span className="font-semibold text-gray-700">Description: </span>
             <span className="text-gray-900">{item.old_goal_decsription}</span>
           </div>
           <div>
-            <span className="font-semibold text-gray-700">Old AI Response: </span>
+            <span className="font-semibold text-gray-700">Solution: </span>
             <span className="text-gray-900">{cleanAIResponse(item.old_ai_response)}</span>
           </div>
           <div className="text-xs text-gray-400">

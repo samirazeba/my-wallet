@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../api/axiosInstance";
 
-export default function useSavingGoalsHistory(userId, dateFilter) {
+export default function useSavingGoalsHistory(userId, dateFilter, sortBy, sortOrder) {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,6 +19,21 @@ export default function useSavingGoalsHistory(userId, dateFilter) {
       })
       .then((res) => {
         let data = res.data.savingGoals || [];
+        if (sortBy) {
+          data = [...data].sort((a, b) => {
+            if (sortBy === "updated_at") {
+              return sortOrder === "asc"
+                ? new Date(a.updated_at) - new Date(b.updated_at)
+                : new Date(b.updated_at) - new Date(a.updated_at);
+            }
+            if (sortBy === "amount") {
+              return sortOrder === "asc"
+                ? a.old_target_amount - b.old_target_amount
+                : b.old_target_amount - a.old_target_amount;
+            }
+            return 0;
+          });
+        }
         setHistory(data);
         setLoading(false);
       })
@@ -35,7 +50,7 @@ export default function useSavingGoalsHistory(userId, dateFilter) {
         }
         setLoading(false);
       });
-  }, [userId, dateFilter]);
+  }, [userId, dateFilter, sortBy, sortOrder]);
 
   return { history, loading, error };
 }

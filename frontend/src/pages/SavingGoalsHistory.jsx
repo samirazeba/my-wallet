@@ -4,13 +4,26 @@ import Sidebar from "../components/Sidebar";
 import DateFilter from "../components/DateFilter";
 import useSavingGoalsHistory from "../hooks/useSavingGoalsHistory";
 import SavingGoalsHistoryList from "../components/SavingGoalsHistoryList";
+import SortSelector from "../components/SortSelector"; // <-- import
 
 const SavingGoalsHistory = () => {
   const navigate = useNavigate();
   const userId = localStorage.getItem("user_id");
   const [dateFilter, setDateFilter] = useState(null);
+  const [sortBy, setSortBy] = useState("updated_at");
+  const [sortOrder, setSortOrder] = useState("desc");
 
-  const { history, loading, error } = useSavingGoalsHistory(userId, dateFilter);
+  const { history, loading, error } = useSavingGoalsHistory(
+    userId,
+    dateFilter,
+    sortBy,
+    sortOrder
+  );
+
+  const handleSortChange = (by, order) => {
+    setSortBy(by);
+    setSortOrder(order);
+  };
 
   return (
     <div className="flex bg-gray-50 min-h-screen">
@@ -27,8 +40,9 @@ const SavingGoalsHistory = () => {
             <h1 className="text-2xl font-semibold mb-2">Saving Goals History</h1>
           </div>
         </div>
-        <div className="mb-4">
+        <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <DateFilter onDateChange={setDateFilter} />
+          <SortSelector sortBy={sortBy} sortOrder={sortOrder} onSortChange={handleSortChange} />
         </div>
         <SavingGoalsHistoryList history={history} loading={loading} error={error} />
       </div>

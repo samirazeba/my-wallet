@@ -13,8 +13,13 @@ const SavingGoals = () => {
   const [sortOrder, setSortOrder] = useState("desc");
   const [refreshFlag, setRefreshFlag] = useState(false);
 
-  const { goals, loading, error } = useSavingGoals(userId, sortBy, sortOrder, refreshFlag);
-
+  const { goals, loading, error } = useSavingGoals(
+    userId,
+    sortBy,
+    sortOrder,
+    refreshFlag,
+    dateFilter
+  );
   const handleSortChange = (by, order) => {
     setSortBy(by);
     setSortOrder(order);
@@ -34,7 +39,12 @@ const SavingGoals = () => {
           sortOrder={sortOrder}
           onSortChange={handleSortChange}
         />
-        <SavingGoalsList goals={goals} loading={loading} error={error} onRefresh={handleRefresh} />
+        <SavingGoalsList
+          goals={goals}
+          loading={loading}
+          error={error}
+          onRefresh={handleRefresh}
+        />
       </div>
     </div>
   );
