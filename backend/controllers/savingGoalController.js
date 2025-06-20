@@ -143,11 +143,13 @@ exports.deleteSavingGoal = async (req, res) => {
 exports.getSavingGoalsByUserId = async (req, res) => {
   try {
     const { user_id } = req.params;
-    const { start, end } = req.query;
+    const { start, end, sortBy, sortOrder } = req.query;
     const savingGoals = await savingGoalModel.getSavingGoalsByUserId(
       user_id,
       start,
-      end
+      end,
+      sortBy,
+      sortOrder
     );
     if (savingGoals.length === 0) {
       return res
@@ -164,20 +166,20 @@ exports.getSavingGoalsByUserId = async (req, res) => {
 exports.getSavingGoalsHistoryByUserId = async (req, res) => {
   try {
     const { user_id } = req.params;
-    const { start, end } = req.query;
+    const { start, end, sortBy, sortOrder } = req.query;
     const savingGoals = await savingGoalModel.getSavingGoalsHistoryByUserId(
       user_id,
       start,
-      end
+      end,
+      sortBy,
+      sortOrder
     );
-    if (savingGoals.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No saving goals history found for this user" });
+    if (!savingGoals.length) {
+      return res.status(404).json({ message: "No saving goals history found for this user" });
     }
     res.status(200).json({ savingGoals });
   } catch (error) {
-    console.error("Get saving goals error: ", error);
-    res.status(500).json({ message: "Error fetching saving goals" });
+    console.error("Get saving goals history error: ", error);
+    res.status(500).json({ message: "Error fetching saving goals history" });
   }
 };

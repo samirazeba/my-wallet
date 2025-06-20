@@ -37,14 +37,19 @@ const SavingGoalsHistory = () => {
             >
               &larr; Back
             </button>
-            <h1 className="text-2xl font-semibold mb-2">Saving Goals History</h1>
+            <h1 className="text-2xl font-semibold mb-2">
+              Saving Goals History
+            </h1>
           </div>
         </div>
         <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <DateFilter onDateChange={setDateFilter} />
-          <SortSelector sortBy={sortBy} sortOrder={sortOrder} onSortChange={handleSortChange} />
         </div>
-        <SavingGoalsHistoryList history={history} loading={loading} error={error} />
+        <SavingGoalsHistoryList
+          history={history}
+          loading={loading}
+          error={error}
+        />
       </div>
     </div>
   );

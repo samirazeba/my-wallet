@@ -18,10 +18,13 @@ export default function useSavingGoals(
     setError(null);
     axiosInstance
       .get(`/saving-goals/get-by-user-id/${userId}`, {
-        params:
-          dateFilter && dateFilter.start && dateFilter.end
+        params: {
+          ...(dateFilter && dateFilter.start && dateFilter.end
             ? { start: dateFilter.start, end: dateFilter.end }
-            : {},
+            : {}),
+          ...(sortBy ? { sortBy } : {}),
+          ...(sortOrder ? { sortOrder } : {}),
+        },
       })
       .then((res) => {
         let data = res.data.savingGoals || [];

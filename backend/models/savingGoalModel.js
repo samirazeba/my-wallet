@@ -22,10 +22,10 @@ exports.editSavingGoal = async (id, fields) => {
     .join(", ");
   const params = [...Object.values(fields), id];
 
-  const [result] = await db.query(
-    `UPDATE saving_goals SET ${setClause} WHERE id = ?`,
-    params
-  );
+  // Add updated_at to the SET clause
+  const query = `UPDATE saving_goals SET ${setClause}, updated_at = NOW() WHERE id = ?`;
+
+  const [result] = await db.query(query, params);
   return result;
 };
 
@@ -41,12 +41,24 @@ exports.deleteSavingGoal = async (id) => {
   return rows;
 };
 
-exports.getSavingGoalsByUserId = async (user_id, start, end) => {
+exports.getSavingGoalsByUserId = async (user_id, start, end, sortBy, sortOrder) => {
   let query = "SELECT * FROM saving_goals WHERE user_id = ? AND is_deleted = 0";
   const params = [user_id];
   if (start && end) {
     query += " AND DATE(created_at) BETWEEN ? AND ?";
     params.push(start, end);
+  }
+  // Add sorting
+  if (sortBy) {
+    const allowedSort = ["created_at", "target_amount", "updated_at"];
+    const allowedOrder = ["asc", "desc"];
+    if (allowedSort.includes(sortBy) && allowedOrder.includes((sortOrder || "").toLowerCase())) {
+      query += ` ORDER BY ${sortBy} ${sortOrder.toUpperCase()}`;
+    } else {
+      query += " ORDER BY updated_at DESC";
+    }
+  } else {
+    query += " ORDER BY updated_at DESC";
   }
   const [rows] = await db.query(query, params);
   return rows;
@@ -85,16 +97,35 @@ exports.addSavingGoalHistory = async ({
 };
 
 exports.softDeleteSavingGoal = async (id) => {
-  const [rows] = await db.query("UPDATE saving_goals SET is_deleted = 1 WHERE id = ?", [id]);
+  const [rows] = await db.query(
+    "UPDATE saving_goals SET is_deleted = 1 WHERE id = ?",
+    [id]
+  );
   return rows;
 };
 
-exports.getSavingGoalsHistoryByUserId = async (user_id, start, end) => {
-  let query = "SELECT * FROM saving_goals_history WHERE user_id = ?";
+exports.getSavingGoalsHistoryByUserId = async (user_id, start, end, sortBy, sortOrder) => {
+  let query = `
+    SELECT h.*, g.name AS goal_name
+    FROM saving_goals_history h
+    JOIN saving_goals g ON h.saving_goal_id = g.id
+    WHERE h.user_id = ?
+  `;
   const params = [user_id];
   if (start && end) {
-    query += " AND DATE(updated_at) BETWEEN ? AND ?";
+    query += " AND DATE(h.updated_at) BETWEEN ? AND ?";
     params.push(start, end);
+  }
+  if (sortBy) {
+    const allowedSort = ["updated_at", "old_target_amount", "new_target_amount"];
+    const allowedOrder = ["asc", "desc"];
+    if (allowedSort.includes(sortBy) && allowedOrder.includes((sortOrder || "").toLowerCase())) {
+      query += ` ORDER BY h.${sortBy} ${sortOrder.toUpperCase()}`;
+    } else {
+      query += " ORDER BY h.updated_at DESC";
+    }
+  } else {
+    query += " ORDER BY h.updated_at DESC";
   }
   const [rows] = await db.query(query, params);
   return rows;

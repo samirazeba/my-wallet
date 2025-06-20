@@ -20,7 +20,7 @@ export default function SavingGoalsHistoryList({ history, loading, error }) {
           <div className="mb-3">
             <div>
               <span className="font-semibold text-gray-700">Name: </span>
-              <span className="text-gray-900">{item.name}</span>
+              <span className="text-gray-900">{item.goal_name}</span>
             </div>
             <div>
               <span className="font-semibold text-gray-700">Target Date: </span>
@@ -43,6 +43,45 @@ export default function SavingGoalsHistoryList({ history, loading, error }) {
           <div>
             <span className="font-semibold text-gray-700">Solution: </span>
             <span className="text-gray-900">{cleanAIResponse(item.old_ai_response)}</span>
+          </div>
+          <div className="text-xs text-gray-400">
+            {item.updated_at
+              ? new Date(item.updated_at).toLocaleString()
+              : ""}
+          </div>
+        </div>
+      ))}
+      {history.map((item) => (
+        <div
+          key={item.id}
+          className="bg-white shadow rounded-2xl p-4 border border-gray-200 mb-2"
+        >
+          <div className="mb-3">
+            <div>
+              <span className="font-semibold text-gray-700">Name: </span>
+              <span className="text-gray-900">{item.goal_name}</span>
+            </div>
+            <div>
+              <span className="font-semibold text-gray-700">Target Date: </span>
+              <span className="text-gray-900">{item.new_target_amount}</span>
+            </div>
+            <div>
+              <span className="font-semibold text-gray-700">Target Date: </span>
+              <span className="text-gray-900">
+                {item.new_target_date
+                  ? new Date(item.old_target_date).toLocaleDateString()
+                  : ""}
+              </span>
+            </div>
+          </div>
+          <hr className="my-2 border-gray-200" />
+          <div>
+            <span className="font-semibold text-gray-700">Description: </span>
+            <span className="text-gray-900">{item.new_goal_decsription}</span>
+          </div>
+          <div>
+            <span className="font-semibold text-gray-700">Solution: </span>
+            <span className="text-gray-900">{cleanAIResponse(item.new_ai_response)}</span>
           </div>
           <div className="text-xs text-gray-400">
             {item.updated_at
