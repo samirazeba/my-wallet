@@ -3,6 +3,7 @@ const router = express.Router();
 const categoriesController = require('../../../../controllers/categoriesController');
 const authenticateToken = require('../../../../middleware/auth');
 
-router.get('/all', authenticateToken, categoriesController.getAllCategories);
+// Route to get total spent per category (with date filter and sorting)
+router.get('/totals', authenticateToken, categoriesController.getTotalSpentPerCategory);
 
 module.exports = router;
