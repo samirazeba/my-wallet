@@ -1,5 +1,10 @@
 const db = require("../config/db");
 
+exports.getAllCategories = async() => {
+    const [rows] = await db.query('SELECT id, name FROM categories');
+    return rows;
+}
+
 // Get total spent per category for a user, with optional date filter and sorting
 exports.getTotalSpentPerCategory = async (user_id, start, end, sort_by, sort_order, bank_account_id) => {
   let query = `

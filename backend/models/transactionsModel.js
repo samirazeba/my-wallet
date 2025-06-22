@@ -1,6 +1,13 @@
 const db = require("../config/db");
 
-exports.getAllTransactions = async (user_id, start, end, bank_account_id) => {
+exports.getAllTransactions = async (
+  user_id,
+  start,
+  end,
+  bank_account_id,
+  sort_by,
+  sort_order
+) => {
   let query =
     "SELECT t.*, c.name AS category_name FROM transactions t JOIN categories c ON t.category_id = c.id WHERE t.user_id = ?";
   const params = [user_id];
@@ -13,6 +20,17 @@ exports.getAllTransactions = async (user_id, start, end, bank_account_id) => {
     query += " AND t.bank_account_id = ?";
     params.push(bank_account_id);
   }
+
+  const allowedSortBy = ["created_at", "amount"];
+  const allowedSortOrder = ["asc", "desc"];
+  const sortBySafe = allowedSortBy.includes(sort_by) ? sort_by : "created_at";
+  const sortOrderSafe = allowedSortOrder.includes(
+    (sort_order || "").toLowerCase()
+  )
+    ? sort_order
+    : "desc";
+
+  query += ` ORDER BY t.${sortBySafe} ${sortOrderSafe.toUpperCase()}`;
 
   const [rows] = await db.query(query, params);
   return rows;
