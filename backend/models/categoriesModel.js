@@ -1,7 +1,7 @@
 const db = require("../config/db");
 
 // Get total spent per category for a user, with optional date filter and sorting
-exports.getTotalSpentPerCategory = async (user_id, start, end, sort_by, sort_order) => {
+exports.getTotalSpentPerCategory = async (user_id, start, end, sort_by, sort_order, bank_account_id) => {
   let query = `
     SELECT 
       c.id AS category_id,
@@ -19,6 +19,12 @@ exports.getTotalSpentPerCategory = async (user_id, start, end, sort_by, sort_ord
   if (start && end) {
     query += " AND DATE(t.created_at) BETWEEN ? AND ?";
     params.push(start, end);
+  }
+
+  // Bank account filter
+  if (bank_account_id) {
+    query += " AND t.bank_account_id = ?";
+    params.push(bank_account_id);
   }
 
   query += " GROUP BY c.id, c.name";

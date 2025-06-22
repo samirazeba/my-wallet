@@ -23,7 +23,7 @@ const Categories = () => {
         <CategoriesHeader
           selectedAccount={selectedAccount}
           onAccountChange={handleAccountChange}
-          onDateRangeChange={handleDateRangeChange}
+          onDateChange={handleDateRangeChange}
           sortBy={sortBy}
           sortOrder={sortOrder}
           onSortChange={handleSortChange}

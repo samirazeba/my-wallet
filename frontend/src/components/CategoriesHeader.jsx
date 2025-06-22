@@ -1,7 +1,7 @@
 import React from "react";
 import AccountSelector from "./AccountSelector";
 import DateFilter from "./DateFilter";
-import SortSelector from "./SortSelector";
+import CategoriesSortSelector from "./CategoriesSortSelector";
 
 export default function ExpensesHeader({
   selectedAccount,
@@ -19,13 +19,13 @@ export default function ExpensesHeader({
         </div>
         <AccountSelector selectedAccount={selectedAccount} onChange={onAccountChange} />
       </div>
-      {/* Filter left, SortSelector right with right margin */}
+      
       <div className="w-full flex flex-row items-center justify-between mb-4">
         <div>
           <DateFilter onDateChange={onDateChange} />
         </div>
         <div className="mr-8">
-          <SortSelector
+          <CategoriesSortSelector
             sortBy={sortBy}
             sortOrder={sortOrder}
             onSortChange={onSortChange}
