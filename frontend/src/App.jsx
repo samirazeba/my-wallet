@@ -15,7 +15,7 @@ import Incomes from './pages/Incomes.jsx';
 import Categories from './pages/Categories.jsx';
 import SavingGoals from './pages/SavingGoals.jsx';
 import SavingGoalsHistory from './pages/SavingGoalsHistory.jsx';
-
+import Profile from './pages/Profile.jsx';
 
 function App() {
   return (
@@ -34,6 +34,7 @@ function App() {
             <Route path="/categories" element={<Categories />} />
             <Route path="/saving-goals" element={<SavingGoals />} />
             <Route path="/saving-goals-history" element={<SavingGoalsHistory />} />
+            <Route path="/profile" element={<Profile />} /> 
             {/* Add more routes here */}
           </Routes>
         </div>

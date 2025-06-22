@@ -28,3 +28,11 @@ exports.getUsersFullName = async (user_id) => {
     );
     return rows[0].full_name; // returns the full name of the user
 };
+
+exports.getUserById = async (user_id) => {
+    const [rows] = await db.query(
+        "SELECT * FROM users WHERE id = ?",
+        [user_id]
+    );
+    return rows[0]; // returns one user or undefined
+}
