@@ -2,8 +2,16 @@ const db = require("../config/db");
 
 exports.getAllBankAccounts = async (user_id) => {
   const [rows] = await db.query(
-    "SELECT id, bank_name, account_number FROM bank_accounts WHERE user_id = ?",
+    "SELECT id, bank_name, account_number, balance FROM bank_accounts WHERE user_id = ?",
     [user_id]
   );
   return rows;
 };
+
+exports.getBankAccountInfo = async (user_id) => {
+  const [rows] = await db.query(
+    "SELECT ba.*, c.* FROM bank_accounts ba JOIN cards c ON ba.id = c.bank_account_id WHERE ba.user_id = ?",
+    [user_id]
+  );
+  return rows[0];
+}
