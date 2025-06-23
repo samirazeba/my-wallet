@@ -1,13 +1,17 @@
-import React from "react";
-import useBankAccountInfo from "../hooks/useBankAccountInfo";
+import React, { useEffect } from "react";
+import useBankAccounts from "../hooks/useBankAccountInfo";
 
 function maskAccountNumber(accountNumber) {
   const str = accountNumber.toString();
   return str.replace(/\d(?=\d{4})/g, "*");
 }
 
-const BankAccountsList = ({ onSelect }) => {
-  const { accounts, loading } = useBankAccountInfo();
+const BankAccountsList = ({ refresh }) => {
+  const { accounts, loading, fetchAccounts } = useBankAccounts();
+
+  useEffect(() => {
+    fetchAccounts();
+  }, [refresh]);
 
   if (loading) {
     return (
@@ -35,20 +39,14 @@ const BankAccountsList = ({ onSelect }) => {
       {accounts.map((acc) => (
         <div
           key={acc.id}
-          className="w-full bg-white shadow rounded-2xl p-4 flex flex-col gap-1 cursor-pointer"
-          onClick={() => onSelect && onSelect(acc.id)}
+          className="w-full bg-white shadow rounded-2xl p-4 flex flex-col gap-1"
         >
-          <div className="font-semibold">
-            Bank: <span className="font-normal">{acc.bank_name}</span>
+          <div className="font-semibold">Bank: <span className="font-normal">{acc.bank_name}</span></div>
+          <div>
+            Bank Account: <span className="font-mono">{maskAccountNumber(acc.account_number)}</span>
           </div>
           <div>
-            Bank Account:{" "}
-            <span className="font-mono">
-              {maskAccountNumber(acc.account_number)}
-            </span>
-          </div>
-          <div className="font-semibold">
-            Balance: <span className="font-normal">{acc.balance}</span>
+            Balance: <span className="font-semibold">{acc.balance} BAM</span>
           </div>
         </div>
       ))}

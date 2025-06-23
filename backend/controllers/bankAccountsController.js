@@ -24,3 +24,26 @@ exports.getBankAccountInfo = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 }
+
+exports.addBankAccount = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { bank_name, account_number, balance } = req.body;
+
+    if (!bank_name || !account_number || balance === undefined) {
+      return res.status(400).json({ error: "All fields are required." });
+    }
+
+    const newAccountId = await bankAccountsModel.addBankAccount(
+      userId,
+      bank_name,
+      account_number,
+      balance
+    );
+
+    res.status(201).json({ message: "Bank account added", id: newAccountId });
+  } catch (error) {
+    console.error("Add Bank Account Error:", error); // <--- Add this line
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axiosInstance from "../api/axiosInstance";
 
 export default function useBankAccounts() {
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  // useCallback to avoid unnecessary re-renders
+  const fetchAccounts = useCallback(() => {
+    setLoading(true);
     axiosInstance
       .get("/bank-accounts/all")
       .then((res) => setAccounts(res.data))
@@ -13,5 +15,9 @@ export default function useBankAccounts() {
       .finally(() => setLoading(false));
   }, []);
 
-  return { accounts, loading };
+  useEffect(() => {
+    fetchAccounts();
+  }, [fetchAccounts]);
+
+  return { accounts, loading, fetchAccounts };
 }

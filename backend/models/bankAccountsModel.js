@@ -15,3 +15,11 @@ exports.getBankAccountInfo = async (user_id) => {
   );
   return rows[0];
 }
+
+exports.addBankAccount = async (user_id, bank_name, account_number, balance) => {
+  const [result] = await db.query(
+    "INSERT INTO bank_accounts (user_id, bank_name, account_number, balance) VALUES (?, ?, ?, ?)",
+    [user_id, bank_name, account_number, balance]
+  );
+  return result.insertId;
+};
