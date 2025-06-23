@@ -6,19 +6,43 @@ import BankAccountsList from "../components/BankAccountList";
 import AddBankAccountModal from "../components/AddBankAccountModal";
 import useAddBankAccount from "../hooks/useAddBankAccount";
 import useUserInfo from "../hooks/useUserInfo";
+import useDeleteBankAccount from "../hooks/useDeleteBankAccount";
+import ConfirmModal from "../components/ConfirmModal";
 
 const Profile = () => {
   const user = useUserInfo();
   const [showAddModal, setShowAddModal] = useState(false);
   const { addBankAccount, loading, error } = useAddBankAccount();
   const [refresh, setRefresh] = useState(false);
+  const { deleteBankAccount, loading: deleteLoading } = useDeleteBankAccount();
 
-  // To refresh the bank accounts list after adding
+  // State for confirm modal
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+
   const handleAddBankAccount = async (form) => {
     const success = await addBankAccount(form);
     if (success) {
       setShowAddModal(false);
-      setRefresh((r) => !r); // toggle to trigger re-fetch in BankAccountsList
+      setRefresh((r) => !r);
+    }
+  };
+
+  // When delete button is clicked
+  const handleDeleteClick = (id) => {
+    setSelectedId(id);
+    setShowConfirm(true);
+  };
+
+  // When confirm is accepted
+  const handleConfirmDelete = async () => {
+    if (selectedId) {
+      const success = await deleteBankAccount(selectedId);
+      if (success) {
+        setRefresh((r) => !r);
+      }
+      setShowConfirm(false);
+      setSelectedId(null);
     }
   };
 
@@ -41,13 +65,20 @@ const Profile = () => {
             Add Bank Account
           </button>
         </div>
-        <BankAccountsList refresh={refresh} />
+        <BankAccountsList refresh={refresh} onDelete={handleDeleteClick} />
         <AddBankAccountModal
           open={showAddModal}
           onClose={() => setShowAddModal(false)}
           onSubmit={handleAddBankAccount}
           loading={loading}
           error={error}
+        />
+        <ConfirmModal
+          open={showConfirm}
+          onClose={() => setShowConfirm(false)}
+          onConfirm={handleConfirmDelete}
+          loading={deleteLoading}
+          message="Are you sure you want to delete this bank account?"
         />
       </div>
     </div>

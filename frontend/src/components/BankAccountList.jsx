@@ -6,7 +6,7 @@ function maskAccountNumber(accountNumber) {
   return str.replace(/\d(?=\d{4})/g, "*");
 }
 
-const BankAccountsList = ({ refresh }) => {
+const BankAccountsList = ({ refresh, onDelete }) => {
   const { accounts, loading, fetchAccounts } = useBankAccounts();
 
   useEffect(() => {
@@ -41,9 +41,23 @@ const BankAccountsList = ({ refresh }) => {
           key={acc.id}
           className="w-full bg-white shadow rounded-2xl p-4 flex flex-col gap-1"
         >
-          <div className="font-semibold">Bank: <span className="font-normal">{acc.bank_name}</span></div>
+          <div className="flex justify-between items-center">
+            <div className="font-semibold">
+              Bank: <span className="font-normal">{acc.bank_name}</span>
+            </div>
+            <button
+              className="text-gray-400 hover:text-red-600"
+              title="Delete"
+              onClick={() => onDelete && onDelete(acc.id)}
+            >
+              <i className="fa fa-trash" />
+            </button>
+          </div>
           <div>
-            Bank Account: <span className="font-mono">{maskAccountNumber(acc.account_number)}</span>
+            Bank Account:{" "}
+            <span className="font-mono">
+              {maskAccountNumber(acc.account_number)}
+            </span>
           </div>
           <div>
             Balance: <span className="font-semibold">{acc.balance} BAM</span>

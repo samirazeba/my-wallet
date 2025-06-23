@@ -2,7 +2,7 @@ const db = require("../config/db");
 
 exports.getAllBankAccounts = async (user_id) => {
   const [rows] = await db.query(
-    "SELECT id, bank_name, account_number, balance FROM bank_accounts WHERE user_id = ?",
+    "SELECT id, bank_name, account_number, balance FROM bank_accounts WHERE user_id = ? AND is_deleted = 0",
     [user_id]
   );
   return rows;
@@ -22,4 +22,12 @@ exports.addBankAccount = async (user_id, bank_name, account_number, balance) => 
     [user_id, bank_name, account_number, balance]
   );
   return result.insertId;
+};
+
+exports.softDeleteBankAccount = async (user_id, account_id) => {
+  const [result] = await db.query(
+    "UPDATE bank_accounts SET is_deleted = 1 WHERE id = ? AND user_id = ?",
+    [account_id, user_id]
+  );
+  return result.affectedRows > 0;
 };

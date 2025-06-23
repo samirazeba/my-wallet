@@ -47,3 +47,18 @@ exports.addBankAccount = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+exports.softDeleteBankAccount = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const accountId = req.params.id;
+    const success = await bankAccountsModel.softDeleteBankAccount(userId, accountId);
+    if (success) {
+      res.status(200).json({ message: "Bank account deleted" });
+    } else {
+      res.status(404).json({ error: "Bank account not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
