@@ -36,5 +36,10 @@ router.get('/view-upcoming-bill/:id', transactionsController.viewBillDetailsById
 // Route to view all incomes
 router.get('/all-incomes/:userId', transactionsController.getAllIncomes);
 
+router.get('/total-expenses/:userId', transactionsController.getTotalExpenses);
+
+router.get('/total-incomes/:userId', transactionsController.getTotalIncomes);
+
+
 
 module.exports = router;

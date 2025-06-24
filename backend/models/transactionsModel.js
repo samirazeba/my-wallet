@@ -243,3 +243,45 @@ exports.getAllIncomes = async (
   const [rows] = await db.query(query, params);
   return rows;
 };
+
+exports.getTotalExpenses = async (user_id, start, end, bank_account_id) => {
+  let query = `
+    SELECT SUM(amount) AS total 
+    FROM transactions 
+    WHERE user_id = ? AND type = 'Expense'
+  `;
+  const params = [user_id];
+
+  if (start && end) {
+    query += " AND DATE(created_at) BETWEEN ? AND ?";
+    params.push(start, end);
+  }
+  if (bank_account_id) {
+    query += " AND bank_account_id = ?";
+    params.push(bank_account_id);
+  }
+
+  const [rows] = await db.query(query, params);
+  return rows[0]?.total || 0;
+};
+
+exports.getTotalIncomes = async (user_id, start, end, bank_account_id) => {
+  let query = `
+    SELECT SUM(amount) AS total 
+    FROM transactions 
+    WHERE user_id = ? AND type = 'Income'
+  `;
+  const params = [user_id];
+
+  if (start && end) {
+    query += " AND DATE(created_at) BETWEEN ? AND ?";
+    params.push(start, end);
+  }
+  if (bank_account_id) {
+    query += " AND bank_account_id = ?";
+    params.push(bank_account_id);
+  }
+
+  const [rows] = await db.query(query, params);
+  return rows[0]?.total || 0;
+};

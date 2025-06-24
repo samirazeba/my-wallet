@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import useExpenses from "../hooks/useExpenses";
 import useTransactionDetails from "../hooks/useTransactionDetails";
+import useTotalExpenses from "../hooks/useTotalExpenses";
 import {
   Dialog,
   DialogBackdrop,
@@ -28,6 +29,12 @@ const ExpensesTable = ({ dateFilter, selectedAccount, sortBy, sortOrder }) => {
     setOpen(false);
     setSelectedId(null);
   };
+
+  const {
+    total,
+    loading: totalLoading,
+    error: totalError,
+  } = useTotalExpenses(dateFilter, selectedAccount);
 
   return (
     <div className="w-full flex flex-col bg-white p-4 shadow rounded-2xl mb-4">
@@ -113,7 +120,23 @@ const ExpensesTable = ({ dateFilter, selectedAccount, sortBy, sortOrder }) => {
               ))}
           </tbody>
         </table>
+
+        
       </div>
+      <div className="mt-6 flex justify-end">
+          <div className="bg-[#f5f7fa] border border-[#b3c7e6] rounded-xl shadow px-6 py-4 text-lg font-semibold text-gray-700 flex items-center min-w-[280px] -mt-2">
+            {totalLoading ? (
+              "Calculating total..."
+            ) : totalError ? (
+              totalError
+            ) : (
+              <>
+                Total Expenses:
+                <span className="ml-2 text-gray-700 font-bold">$ {total}</span>
+              </>
+            )}
+          </div>
+        </div>
       <Dialog open={open} onClose={handleClose} className="relative z-50">
         <DialogBackdrop className="fixed inset-0 bg-gray-500/75" />
         <div className="fixed inset-0 z-50 w-screen overflow-y-auto">

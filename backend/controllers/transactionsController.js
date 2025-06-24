@@ -276,3 +276,33 @@ exports.getAllIncomes = async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 };
+
+exports.getTotalExpenses = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { start, end, bank_account_id } = req.query;
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+    const total = await transactionsModel.getTotalExpenses(userId, start, end, bank_account_id);
+    res.status(200).json({ total });
+  } catch (error) {
+    console.error("Error fetching total expenses:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+exports.getTotalIncomes = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { start, end, bank_account_id } = req.query;
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+    const total = await transactionsModel.getTotalIncomes(userId, start, end, bank_account_id);
+    res.status(200).json({ total });
+  } catch (error) {
+    console.error("Error fetching total incomes:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
