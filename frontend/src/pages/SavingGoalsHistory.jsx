@@ -28,7 +28,7 @@ const SavingGoalsHistory = () => {
   return (
     <div className="flex bg-gray-50 min-h-screen">
       <Sidebar />
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-6 ml-64">
         <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white p-4 shadow rounded-2xl mb-4">
           <div className="flex items-center gap-2">
             <button

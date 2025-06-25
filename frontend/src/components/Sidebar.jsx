@@ -15,7 +15,7 @@ const Sidebar = () => {
   return (
     <>
       <aside
-        className="flex flex-col w-64 h-screen px-5 py-8 overflow-y-auto border-r border-white/30 backdrop-blur-lg bg-white/60 shadow-lg"
+        className="fixed top-0 left-0 w-64 h-screen px-5 py-8 overflow-y-auto border-r border-white/30 backdrop-blur-lg bg-white/60 shadow-lg z-40"
         style={{ backgroundColor: "#dbe2e9" }}
       >
         <a href="#" className="flex items-center space-x-3 mb-4">

@@ -9,9 +9,12 @@ export default function RecentTransactions({ selectedAccount, dateFilter }) {
     <div className="bg-white rounded-xl shadow p-4 mb-4">
       <div className="flex justify-between items-center mb-2">
         <div className="font-semibold">Transactions</div>
-        <Link to="/transactions" className="text-blue-600 text-sm underline">
-          View all transactions
-        </Link>
+        <Link
+  to="/transactions"
+          className="ml-4 px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm text-gray-700"
+>
+  View all transactions
+</Link>
       </div>
       {loading ? (
         <div>Loading...</div>
