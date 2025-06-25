@@ -1,4 +1,5 @@
 const transactionsModel = require("../models/transactionsModel");
+const bankAccountsModel = require("../models/bankAccountsModel");
 
 exports.getAllTransactions = async (req, res) => {
   try {
@@ -64,6 +65,8 @@ exports.addTransactions = async (req, res) => {
       type,
       description
     );
+    // Update bank account balance after transaction is added
+    await bankAccountsModel.updateBankAccountBalance(bank_account_id, amount, type);
     res.status(201).json(transaction);
   } catch (error) {
     console.error("Error adding transaction:", error);

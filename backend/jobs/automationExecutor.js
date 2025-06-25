@@ -1,5 +1,6 @@
 const cron = require("node-cron");
 const db = require("../config/db");
+const bankAccountsModel = require("../models/bankAccountsModel");
 
 function getNextExecutionDate(current, repeatEvery, repeatUnit) {
   const date = new Date(current);
@@ -42,6 +43,12 @@ async function executeAutomations() {
           automation.type,
           automation.description,
         ]
+      );
+      // Update bank account balance after automation transaction
+      await bankAccountsModel.updateBankAccountBalance(
+        automation.bank_account_id || 1,
+        automation.amount,
+        automation.type
       );
       const newNextDate = getNextExecutionDate(
         automation.next_execution_date,

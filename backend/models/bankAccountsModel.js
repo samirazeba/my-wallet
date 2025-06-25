@@ -31,3 +31,13 @@ exports.softDeleteBankAccount = async (user_id, account_id) => {
   );
   return result.affectedRows > 0;
 };
+
+exports.updateBankAccountBalance = async (bank_account_id, amount, type) => {
+  // type: 'Expense' or 'Income'
+  const sign = type === 'Expense' ? -1 : 1;
+  const [result] = await db.query(
+    "UPDATE bank_accounts SET balance = balance + ? WHERE id = ?",
+    [sign * amount, bank_account_id]
+  );
+  return result.affectedRows > 0;
+};
