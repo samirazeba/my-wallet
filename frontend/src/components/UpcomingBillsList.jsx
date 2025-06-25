@@ -133,9 +133,9 @@ export default function UpcomingBillsList({
             <div>
               <div className="font-semibold text-lg">{bill.name}</div>
               <div className="text-gray-500 text-sm">{bill.category_name}</div>
-              <div className="text-gray-400 text-xs">
-                {bill.last_executed
-                  ? new Date(bill.last_executed).toLocaleDateString()
+              <div className="text-gray-400 text-xs">Due: 
+                {bill.next_execution_date
+                  ? new Date(bill.next_execution_date).toLocaleDateString()
                   : "MM/DD/YYYY"}
               </div>
             </div>

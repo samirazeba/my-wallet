@@ -28,7 +28,7 @@ export default function UpcomingBillsBox({ selectedAccount, dateFilter }) {
                 <div>
                   <div className="font-semibold text-gray-800">{bill.name}</div>
                   <div className="text-xs text-gray-500">
-                    Due: {bill.due_date ? bill.due_date.slice(0, 10) : "N/A"}
+                    Due: {bill.next_execution_date ? bill.next_execution_date.slice(0, 10) : "N/A"}
                   </div>
                 </div>
               </div>
