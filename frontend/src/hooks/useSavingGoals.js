@@ -28,6 +28,8 @@ export default function useSavingGoals(
       })
       .then((res) => {
         let data = res.data.savingGoals || [];
+        // Filter out expired goals
+        data = data.filter((goal) => !goal.is_expired);
         if (sortBy) {
           data = [...data].sort((a, b) => {
             if (sortBy === "created_at") {

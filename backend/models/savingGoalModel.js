@@ -130,3 +130,10 @@ exports.getSavingGoalsHistoryByUserId = async (user_id, start, end, sortBy, sort
   const [rows] = await db.query(query, params);
   return rows;
 };
+
+exports.expireOldSavingGoals = async () => {
+  const [result] = await db.query(
+    "UPDATE saving_goals SET is_expired = 1 WHERE target_date < NOW() AND is_expired = 0"
+  );
+  return result;
+};

@@ -1,10 +1,6 @@
 import React, { useEffect } from "react";
 import useBankAccounts from "../hooks/useBankAccountInfo";
-
-function maskAccountNumber(accountNumber) {
-  const str = accountNumber.toString();
-  return str.replace(/\d(?=\d{4})/g, "*");
-}
+import maskAccountNumber from "../utils/maskAccountNumber";
 
 const BankAccountsList = ({ refresh, onDelete }) => {
   const { accounts, loading, fetchAccounts } = useBankAccounts();

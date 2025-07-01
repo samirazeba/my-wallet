@@ -1,5 +1,6 @@
 import React from "react";
 import useBankAccounts from "../hooks/useBankAccounts";
+import maskAccountNumber from "../utils/maskAccountNumber";
 
 export default function AccountSelector({ selectedAccount, onChange }) {
   const accounts = useBankAccounts();
@@ -7,7 +8,7 @@ export default function AccountSelector({ selectedAccount, onChange }) {
   return (
     <div className="flex flex-col space-y-3">
       <label htmlFor="bankAccount" className="text-sm font-medium">
-        Please choose your bank account
+        All accounts
       </label>
       <select
         id="bankAccount"
@@ -18,7 +19,7 @@ export default function AccountSelector({ selectedAccount, onChange }) {
         <option value="">Select your bank account</option>
         {accounts.map((acc) => (
           <option key={acc.id} value={acc.id}>
-            {acc.bank_name} - {acc.account_number}
+            {acc.bank_name} - {maskAccountNumber(acc.account_number)}
           </option>
         ))}
       </select>

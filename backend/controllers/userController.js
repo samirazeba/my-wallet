@@ -1,5 +1,6 @@
 const userModel = require('../models/userModel');
 const validateRegistrationInput = require('../contracts/registrationValidations');
+const savingGoalModel = require('../models/savingGoalModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -57,6 +58,8 @@ exports.login = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
+
+    await savingGoalModel.expireOldSavingGoals();
 
     const token = jwt.sign (
       {id: user.id, email: user.email},

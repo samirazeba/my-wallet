@@ -1,5 +1,6 @@
 import React from "react";
 import useBankAccounts from "../hooks/useBankAccounts";
+import maskAccountNumber from "../utils/maskAccountNumber";
 
 export default function BankAccountBox({ selectedAccount }) {
   const accounts = useBankAccounts();
@@ -10,7 +11,7 @@ export default function BankAccountBox({ selectedAccount }) {
       {account ? (
         <>
           <div className="font-semibold">Bank: {account.bank_name}</div>
-          <div>Account: {account.account_number}</div>
+          <div>Account: {maskAccountNumber(account.account_number)}</div>
           <div>
             Balance: <span className="font-bold">{account.balance} BAM</span>
           </div>
