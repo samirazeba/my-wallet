@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react";
 import useCategories from "../hooks/useCategories";
 import useBankAccounts from "../hooks/useBankAccounts";
+import axiosInstance from "../api/axiosInstance";
 
 export default function AddTransactionModal({ open, onClose, onSubmit, loading, defaultBankAccountId }) {
   const categories = useCategories();
   const accounts = useBankAccounts();
 
-  // Set initial form state, using defaultBankAccountId if provided
   const [form, setForm] = useState({
     bank_account_id: defaultBankAccountId || "",
     category_id: "",
@@ -18,16 +18,44 @@ export default function AddTransactionModal({ open, onClose, onSubmit, loading, 
     description: "",
   });
 
-  // If defaultBankAccountId changes (e.g., user selects a different account in header), update form
+  const [file, setFile] = useState(null);
+  const [fileUploadStatus, setFileUploadStatus] = useState("");
+  const [uploadedFileInfo, setUploadedFileInfo] = useState(null);
+
   useEffect(() => {
     setForm((prev) => ({
       ...prev,
       bank_account_id: defaultBankAccountId || "",
     }));
-  }, [defaultBankAccountId, open]); // also reset when modal opens
+  }, [defaultBankAccountId, open]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+    setFileUploadStatus("");
+    setUploadedFileInfo(null);
+  };
+
+  const handleFileUpload = async () => {
+    if (!file) {
+      setFileUploadStatus("Please select a PDF file.");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      setFileUploadStatus("Uploading...");
+      const res = await axiosInstance.post("/file-upload/pdf", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setFileUploadStatus("Upload successful!");
+      setUploadedFileInfo(res.data);
+    } catch (err) {
+      setFileUploadStatus("Upload failed: " + (err.response?.data?.error || err.message));
+    }
   };
 
   const handleSubmit = (e) => {
@@ -42,9 +70,45 @@ export default function AddTransactionModal({ open, onClose, onSubmit, loading, 
         <div className="flex min-h-full items-center justify-center p-4 text-center">
           <DialogPanel className="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
             <div className="bg-white px-6 pt-6 pb-4">
-              <DialogTitle as="h3" className="text-lg font-semibold text-[#3b4a6b] mb-2">
-                Add Transaction
-              </DialogTitle>
+              <div className="flex justify-between items-center mb-2">
+                <DialogTitle as="h3" className="text-lg font-semibold text-[#3b4a6b]">
+                  Add Transaction
+                </DialogTitle>
+                {/* File upload button in upper right */}
+                <div>
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    id="pdf-upload"
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                  />
+                  <label htmlFor="pdf-upload" className="cursor-pointer">
+                    <span className="inline-block bg-[#b3c7e6] px-3 py-1 rounded text-sm font-semibold text-gray-700 hover:bg-[#9bb6db]">
+                      Upload PDF
+                    </span>
+                  </label>
+                  {file && (
+                    <button
+                      type="button"
+                      onClick={handleFileUpload}
+                      className="ml-2 bg-green-200 px-2 py-1 rounded text-xs"
+                    >
+                      {fileUploadStatus === "Uploading..." ? "Uploading..." : "Upload"}
+                    </button>
+                  )}
+                </div>
+              </div>
+              {fileUploadStatus && (
+                <div className={`mb-2 text-sm ${fileUploadStatus.includes("failed") ? "text-red-600" : "text-green-600"}`}>
+                  {fileUploadStatus}
+                </div>
+              )}
+              {uploadedFileInfo && (
+                <div className="mb-2 text-xs text-gray-600">
+                  Uploaded: {uploadedFileInfo.originalname}
+                </div>
+              )}
               <form onSubmit={handleSubmit} className="space-y-3">
                 <input name="name" value={form.name} onChange={handleChange} required placeholder="Name" className="w-full border rounded p-2" />
                 <input name="beneficiary" value={form.beneficiary} onChange={handleChange} required placeholder="Beneficiary" className="w-full border rounded p-2" />
@@ -59,7 +123,6 @@ export default function AddTransactionModal({ open, onClose, onSubmit, loading, 
                     <option key={cat.id} value={cat.id}>{cat.name}</option>
                   ))}
                 </select>
-                {/* Bank Account Selector */}
                 <select
                   name="bank_account_id"
                   value={form.bank_account_id}

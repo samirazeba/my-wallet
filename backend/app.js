@@ -18,6 +18,7 @@ const savingGoalsRoutes = require("./routes/api/v1/gen/savingGoals");
 const categoriesRoutes = require("./routes/api/v1/gen/categories");
 const bankAccountsRoutes = require("./routes/api/v1/gen/bankAccounts");
 const jobsRoutes = require("./routes/api/v1/gen/jobs");
+const fileUploadRoutes = require("./routes/api/v1/gen/fileUpload");
 
 
 app.use("/api/v1/gen/users", userRoutes);
@@ -29,3 +30,4 @@ app.use("/api/v1/gen/jobs", jobsRoutes);
 app.listen (3000, ()=> {
     console.log ('Server is running on port 3000');
 });
+app.use("/api/v1/gen/file-upload", fileUploadRoutes);
