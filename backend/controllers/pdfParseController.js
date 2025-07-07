@@ -120,9 +120,8 @@ function parseUnicreditStatement(text) {
   return transactions;
 }
 
-
 function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 exports.parseUnincreditBankPdf = async (req, res) => {
   try {
@@ -145,20 +144,20 @@ exports.parseUnincreditBankPdf = async (req, res) => {
 
     const transactions = parseUnicreditStatement(pdfData.text);
     if (transactions.length === 0) {
-      return res
-        .status(200)
-        .json({
-          transactions: [],
-          message: "No transactions found. Check PDF format.",
-        });
+      return res.status(200).json({
+        transactions: [],
+        message: "No transactions found. Check PDF format.",
+      });
     }
 
     // AI categorize each transaction
     const categorizedTransactions = [];
     for (const tx of transactions) {
       const category = await aiCategorizeService.categorizeTransaction(tx);
-      categorizedTransactions.push({ ...tx, category });
       await delay(1200); // 1.2 seconds between requests (adjust as needed)
+      const beneficiary = await aiCategorizeService.extractBeneficiary(tx.name);
+      await delay(1200);
+      categorizedTransactions.push({ ...tx, category, beneficiary });
     }
 
     return res.json({ transactions: categorizedTransactions });

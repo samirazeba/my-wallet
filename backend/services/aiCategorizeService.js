@@ -43,3 +43,38 @@ Transaction:
   // Return the trimmed category
   return response.data.choices[0].message.content.trim();
 };
+
+exports.extractBeneficiary = async (transactionName) => {
+  const prompt = `
+Extract the beneficiary (person or company receiving or sending money) from the following bank transaction description. 
+If you cannot recognize a beneficiary, respond with "Unknown".
+Transaction description: "${transactionName}"
+Return only the beneficiary name or "Unknown".
+`;
+
+  try {
+    const response = await axios.post(
+      TOGETHER_API_URL,
+      {
+        model: MODEL,
+        messages: [
+          { role: "system", content: "You are a financial assistant. Extract the beneficiary from transaction descriptions. Only return the beneficiary name or 'Unknown'." },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.1,
+        max_tokens: 20
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.TOGETHER_AI_API_KEY}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+    const result = response.data.choices[0].message.content.trim();
+    return result || "Unknown";
+  } catch (error) {
+    console.error("AI beneficiary extraction error:", error.response?.data || error.message);
+    return "Unknown";
+  }
+};
