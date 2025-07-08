@@ -52,10 +52,11 @@ exports.addTransaction = async (
   beneficiary,
   amount,
   type,
-  description
+  description,
+  created_at
 ) => {
   const [rows] = await db.query(
-    "INSERT INTO transactions (user_id, bank_account_id, category_id, name, beneficiary, amount, type, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+    "INSERT INTO transactions (user_id, bank_account_id, category_id, name, beneficiary, amount, type, description, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
     [
       user_id,
       bank_account_id,
@@ -65,6 +66,7 @@ exports.addTransaction = async (
       amount,
       type,
       description,
+      created_at || new Date(),
     ]
   );
   return rows;
@@ -284,4 +286,12 @@ exports.getTotalIncomes = async (user_id, start, end, bank_account_id) => {
 
   const [rows] = await db.query(query, params);
   return rows[0]?.total || 0;
+};
+
+exports.findTransaction = async ({ user_id, bank_account_id, category_id, date, amount, name, type }) => {
+  const [rows] = await db.query(
+    "SELECT id FROM transactions WHERE user_id = ? AND bank_account_id = ? AND category_id = ? AND name = ? AND amount = ? AND type = ? AND DATE(created_at) = ? LIMIT 1",
+    [user_id, bank_account_id, category_id, name, amount, type, date]
+  );
+  return rows[0] || null;
 };

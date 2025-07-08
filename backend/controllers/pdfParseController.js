@@ -110,7 +110,7 @@ function parseUnicreditStatement(text) {
       date: dates[i],
       name: merchantNames[i],
       beneficiary: "Beneficiary",
-      amount: amount,
+      amount: Math.abs(amount),
       type: amount < 0 ? "Expense" : "Income",
       category: "category",
       bank_account: bank_account,
@@ -165,4 +165,25 @@ exports.parseUnincreditBankPdf = async (req, res) => {
     console.error("PDF parse error:", err);
     res.status(500).json({ error: "Failed to parse PDF" });
   }
+};
+
+exports.parseUnincreditBankPdfInternal = async function(filename) {
+  const filePath = path.join(__dirname, "../uploads", filename);
+  if (!fs.existsSync(filePath)) throw new Error("File not found");
+
+  const dataBuffer = fs.readFileSync(filePath);
+  const pdfData = await pdfParse(dataBuffer);
+
+  const transactions = parseUnicreditStatement(pdfData.text);
+  if (transactions.length === 0) return [];
+
+  const categorizedTransactions = [];
+  for (const tx of transactions) {
+    const category = await aiCategorizeService.categorizeTransaction(tx);
+    await delay(1200);
+    const beneficiary = await aiCategorizeService.extractBeneficiary(tx.name);
+    await delay(1200);
+    categorizedTransactions.push({ ...tx, category, beneficiary });
+  }
+  return categorizedTransactions;
 };
