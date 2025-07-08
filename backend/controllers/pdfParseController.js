@@ -9,6 +9,14 @@ function parseUnicreditStatement(text) {
   const bankAccMatch = text.match(/Broj racuna:\s*(\d+)/);
   const bank_account = bankAccMatch ? bankAccMatch[1] : "Unknown";
 
+  // Extract balance
+  const balanceMatch = text.match(
+    /Novo stanje na dan [\d\.]+ iznosi\s+([-\d\.,]+)\s*BAM/i
+  );
+  const balance = balanceMatch
+    ? parseFloat(balanceMatch[1].replace(",", "."))
+    : null;
+
   // Split into lines and clean
   const lines = text
     .split(/\r?\n/)
@@ -112,12 +120,15 @@ function parseUnicreditStatement(text) {
       beneficiary: "Beneficiary",
       amount: Math.abs(amount),
       type: amount < 0 ? "Expense" : "Income",
-      category: "category",
-      bank_account: bank_account,
+      category: "category"
     });
   }
 
-  return transactions;
+  return {
+    transactions,
+    bank_account,
+    balance,
+  };
 }
 
 function delay(ms) {
@@ -142,7 +153,7 @@ exports.parseUnincreditBankPdf = async (req, res) => {
       return res.json({ text: pdfData.text });
     }
 
-    const transactions = parseUnicreditStatement(pdfData.text);
+    const { transactions, bank_account, balance } = parseUnicreditStatement(pdfData.text);
     if (transactions.length === 0) {
       return res.status(200).json({
         transactions: [],
@@ -160,21 +171,21 @@ exports.parseUnincreditBankPdf = async (req, res) => {
       categorizedTransactions.push({ ...tx, category, beneficiary });
     }
 
-    return res.json({ transactions: categorizedTransactions });
+    return res.json({ transactions: categorizedTransactions, bank_account, balance });
   } catch (err) {
     console.error("PDF parse error:", err);
     res.status(500).json({ error: "Failed to parse PDF" });
   }
 };
 
-exports.parseUnincreditBankPdfInternal = async function(filename) {
+exports.parseUnincreditBankPdfInternal = async function (filename) {
   const filePath = path.join(__dirname, "../uploads", filename);
   if (!fs.existsSync(filePath)) throw new Error("File not found");
 
   const dataBuffer = fs.readFileSync(filePath);
   const pdfData = await pdfParse(dataBuffer);
 
-  const transactions = parseUnicreditStatement(pdfData.text);
+  const { transactions, bank_account, balance } = parseUnicreditStatement(pdfData.text);
   if (transactions.length === 0) return [];
 
   const categorizedTransactions = [];
@@ -185,5 +196,5 @@ exports.parseUnincreditBankPdfInternal = async function(filename) {
     await delay(1200);
     categorizedTransactions.push({ ...tx, category, beneficiary });
   }
-  return categorizedTransactions;
+  return { transactions: categorizedTransactions, bank_account, balance };
 };

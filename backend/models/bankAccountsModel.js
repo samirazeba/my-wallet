@@ -16,10 +16,10 @@ exports.getBankAccountInfo = async (user_id) => {
   return rows[0];
 }
 
-exports.addBankAccount = async (user_id, bank_name, account_number, balance) => {
+exports.addBankAccount = async (user_id, bank_name, account_number, balance, created_at) => {
   const [result] = await db.query(
-    "INSERT INTO bank_accounts (user_id, bank_name, account_number, balance) VALUES (?, ?, ?, ?)",
-    [user_id, bank_name, account_number, balance]
+    "INSERT INTO bank_accounts (user_id, bank_name, account_number, balance, created_at) VALUES (?, ?, ?, ?, ?)",
+    [user_id, bank_name, account_number, balance, created_at || new Date()]
   );
   return result.insertId;
 };
@@ -40,4 +40,11 @@ exports.updateBankAccountBalance = async (bank_account_id, amount, type) => {
     [sign * amount, bank_account_id]
   );
   return result.affectedRows > 0;
+};
+exports.findBankAccountByNumber = async (user_id, account_number) => {
+  const [rows] = await db.query(
+    `SELECT * FROM bank_accounts WHERE user_id = ? AND account_number = ? AND is_deleted = 0`,
+    [user_id, account_number]
+  );
+  return rows[0] || null;
 };

@@ -433,41 +433,41 @@ exports.saveParsedTransactions = async (req, res) => {
   }
 };
 
-exports.saveParsedTransactionsInternal = async function (userId, transactions) {
+exports.saveParsedTransactionsInternal = async function (userId, parsedData) {
   let saved = 0,
     skipped = 0,
     errors = 0;
   const results = [];
 
-  // Fetch all categories once
+  // parsedData: { transactions, bank_account, balance }
+  const { transactions, bank_account, balance } = parsedData;
+
+  // 1. Check if bank account exists for this user and account number
+  let bankAccount = await bankAccountsModel.findBankAccountByNumber(userId, bank_account);
+
+  if (!bankAccount) {
+    // 2. If not, add it with parsed balance and first transaction date as created_at
+    const firstTxDate = transactions.length > 0 ? toISODate(transactions[0].date) : null;
+    const newAccountId = await bankAccountsModel.addBankAccount(
+      userId,
+      "UniCredit Bank",
+      bank_account,
+      balance,
+      firstTxDate // Make sure your addBankAccount supports created_at as the 5th argument
+    );
+    bankAccount = { id: newAccountId, account_number: bank_account };
+  }
+
+  // Fetch all categories once for mapping
   const categories = await categoriesModel.getAllCategories();
 
   for (const tx of transactions) {
-    let bank_account_id = tx.bank_account_id;
+    let bank_account_id = bankAccount.id;
 
-    // If missing, try to resolve from bank_account (account number)
-    if (!bank_account_id && tx.bank_account) {
-      const accounts = await bankAccountsModel.getAllBankAccounts(userId);
-      const found = accounts.find(
-        (acc) => acc.account_number == tx.bank_account
-      );
-      if (found) bank_account_id = found.id;
-    }
-
-    if (!bank_account_id) {
-      results.push({
-        ...tx,
-        status: "error",
-        reason: "Missing bank_account_id",
-      });
-      errors++;
-      continue;
-    }
-
-    const category = tx.category || "Other";
     // Map category name to ID
+    const categoryName = tx.category || "Other";
     const categoryObj =
-      categories.find((c) => c.name.toLowerCase() === category.toLowerCase()) ||
+      categories.find((c) => c.name.toLowerCase() === categoryName.toLowerCase()) ||
       categories.find((c) => c.name.toLowerCase() === "other");
 
     if (!categoryObj) {
@@ -479,6 +479,7 @@ exports.saveParsedTransactionsInternal = async function (userId, transactions) {
 
     const isoDate = toISODate(tx.date);
 
+    // Check for duplicate: same user, bank_account, category, date, amount, name, type
     const existing = await transactionsModel.findTransaction({
       user_id: userId,
       bank_account_id,
@@ -495,10 +496,11 @@ exports.saveParsedTransactionsInternal = async function (userId, transactions) {
       continue;
     }
 
+    // Insert transaction
     await transactionsModel.addTransaction(
       userId,
       bank_account_id,
-      category_id, // <-- Use integer ID
+      category_id,
       tx.name,
       tx.beneficiary,
       tx.amount,
