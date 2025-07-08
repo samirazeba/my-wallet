@@ -66,14 +66,20 @@ export default function AddTransactionModal({ open, onClose, onSubmit, loading, 
 
     // Show success modal based on backend response
     if (result) {
-      if (result.newBankAccountCreated) {
+      if (result.saved === 0 && result.skipped > 0 && result.errors === 0) {
+        setSuccessMessage("All transactions from this file already exist in your database. No new transactions were added.");
+      } else if (result.newBankAccountCreated) {
         setSuccessMessage("Your transactions and new bank account have been successfully added.");
       } else {
         setSuccessMessage("Your transactions have been successfully added.");
       }
       setShowSuccess(true);
+
+      // Refresh transactions in parent
+      if (onTransactionsUpdated) {
+        onTransactionsUpdated();
+      }
     }
-    // Optionally: refresh transactions or show a toast
   };
 
   const handleGoToTransactions = () => {

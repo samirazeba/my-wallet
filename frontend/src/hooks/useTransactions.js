@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../api/axiosInstance";
 
-export default function useTransactions(dateFilter, selectedAccount, sortBy, sortOrder) {
+export default function useTransactions(dateFilter, selectedAccount, sortBy, sortOrder, refreshKey = 0) {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,7 +30,7 @@ export default function useTransactions(dateFilter, selectedAccount, sortBy, sor
       .then((res) => setTransactions(res.data))
       .catch((err) => setError(err.response?.data?.error || "Error fetching transactions"))
       .finally(() => setLoading(false));
-  }, [dateFilter, selectedAccount, sortBy, sortOrder]);
+  }, [dateFilter, selectedAccount, sortBy, sortOrder, refreshKey]);
 
   return { transactions, loading, error };
 }

@@ -7,11 +7,23 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import AddTransactionModal from "./AddTransactionModal";
+import AddTransactionModal from "./AddtransactionModal";
 import useAddTransaction from "../hooks/useAddTransaction";
 
-const TransactionsTable = ({ dateFilter, selectedAccount, sortBy, sortOrder }) => {
-  const { transactions, loading, error } = useTransactions(dateFilter, selectedAccount, sortBy, sortOrder);
+const TransactionsTable = ({
+  dateFilter,
+  selectedAccount,
+  sortBy,
+  sortOrder,
+}) => {
+  const [refreshKey, setRefreshKey] = useState(0);
+  const { transactions, loading, error } = useTransactions(
+    dateFilter,
+    selectedAccount,
+    sortBy,
+    sortOrder,
+    refreshKey
+  );
   const [selectedId, setSelectedId] = useState(null);
   const [open, setOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
@@ -50,6 +62,10 @@ const TransactionsTable = ({ dateFilter, selectedAccount, sortBy, sortOrder }) =
     }
   };
 
+  const fetchTransactions = () => {
+    setRefreshKey((prev) => prev + 1);
+  };
+
   return (
     <div className="w-full flex flex-col bg-white p-4 shadow rounded-2xl mb-4">
       <div className="flex justify-start mb-4">
@@ -66,6 +82,7 @@ const TransactionsTable = ({ dateFilter, selectedAccount, sortBy, sortOrder }) =
         onSubmit={handleAddSubmit}
         loading={addLoading}
         defaultBankAccountId={selectedAccount}
+        onTransactionsUpdated={fetchTransactions}
       />
       {addError && (
         <div className="text-red-600 text-center mb-2">{addError}</div>
