@@ -2,11 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react";
 import useCategories from "../hooks/useCategories";
 import useBankAccounts from "../hooks/useBankAccounts";
-import axiosInstance from "../api/axiosInstance";
+import usePdfUpload from "../hooks/usePdfUpload";
+import PdfUploadConfirmationModal from "./PdfUploadConfirmationModal";
+import SuccessModal from "./SuccessModal";
+import { useNavigate } from "react-router-dom";
 
 export default function AddTransactionModal({ open, onClose, onSubmit, loading, defaultBankAccountId }) {
   const categories = useCategories();
   const accounts = useBankAccounts();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     bank_account_id: defaultBankAccountId || "",
@@ -18,9 +22,20 @@ export default function AddTransactionModal({ open, onClose, onSubmit, loading, 
     description: "",
   });
 
-  const [file, setFile] = useState(null);
-  const [fileUploadStatus, setFileUploadStatus] = useState("");
-  const [uploadedFileInfo, setUploadedFileInfo] = useState(null);
+  // PDF upload state via custom hook
+  const {
+    uploading,
+    uploadedFile,
+    uploadError,
+    uploadPdf,
+    parseAndSavePdf,
+    deletePdf,
+    reset: resetPdfUpload,
+  } = usePdfUpload();
+
+  const [showPdfConfirm, setShowPdfConfirm] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     setForm((prev) => ({
@@ -33,34 +48,50 @@ export default function AddTransactionModal({ open, onClose, onSubmit, loading, 
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-    setFileUploadStatus("");
-    setUploadedFileInfo(null);
+  // Handle file selection and upload
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const result = await uploadPdf(file);
+      if (result) setShowPdfConfirm(true);
+    }
   };
 
-  const handleFileUpload = async () => {
-    if (!file) {
-      setFileUploadStatus("Please select a PDF file.");
-      return;
+  // Confirmation modal: Add transactions from PDF
+  const handleAddTransactions = async () => {
+    if (!uploadedFile?.filename) return;
+    const result = await parseAndSavePdf(uploadedFile.filename);
+    setShowPdfConfirm(false);
+    resetPdfUpload();
+
+    // Show success modal based on backend response
+    if (result) {
+      if (result.newBankAccountCreated) {
+        setSuccessMessage("Your transactions and new bank account have been successfully added.");
+      } else {
+        setSuccessMessage("Your transactions have been successfully added.");
+      }
+      setShowSuccess(true);
     }
-    const formData = new FormData();
-    formData.append("file", file);
-    try {
-      setFileUploadStatus("Uploading...");
-      const res = await axiosInstance.post("/file-upload/pdf", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      setFileUploadStatus("Upload successful!");
-      setUploadedFileInfo(res.data);
-    } catch (err) {
-      setFileUploadStatus("Upload failed: " + (err.response?.data?.error || err.message));
-    }
+    // Optionally: refresh transactions or show a toast
+  };
+
+  const handleGoToTransactions = () => {
+    setShowSuccess(false);
+    navigate("/transactions");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(form);
+  };
+
+  const handleDiscard = async () => {
+    if (uploadedFile?.filename) {
+      await deletePdf(uploadedFile.filename);
+    }
+    setShowPdfConfirm(false);
+    resetPdfUpload();
   };
 
   return (
@@ -82,31 +113,18 @@ export default function AddTransactionModal({ open, onClose, onSubmit, loading, 
                     id="pdf-upload"
                     style={{ display: "none" }}
                     onChange={handleFileChange}
+                    disabled={uploading}
                   />
                   <label htmlFor="pdf-upload" className="cursor-pointer">
                     <span className="inline-block bg-[#b3c7e6] px-3 py-1 rounded text-sm font-semibold text-gray-700 hover:bg-[#9bb6db]">
                       Upload PDF
                     </span>
                   </label>
-                  {file && (
-                    <button
-                      type="button"
-                      onClick={handleFileUpload}
-                      className="ml-2 bg-green-200 px-2 py-1 rounded text-xs"
-                    >
-                      {fileUploadStatus === "Uploading..." ? "Uploading..." : "Upload"}
-                    </button>
-                  )}
                 </div>
               </div>
-              {fileUploadStatus && (
-                <div className={`mb-2 text-sm ${fileUploadStatus.includes("failed") ? "text-red-600" : "text-green-600"}`}>
-                  {fileUploadStatus}
-                </div>
-              )}
-              {uploadedFileInfo && (
-                <div className="mb-2 text-xs text-gray-600">
-                  Uploaded: {uploadedFileInfo.originalname}
+              {uploadError && (
+                <div className="mb-2 text-sm text-red-600">
+                  {uploadError}
                 </div>
               )}
               <form onSubmit={handleSubmit} className="space-y-3">
@@ -147,6 +165,20 @@ export default function AddTransactionModal({ open, onClose, onSubmit, loading, 
                   </button>
                 </div>
               </form>
+              {/* PDF Upload Confirmation Modal */}
+              <PdfUploadConfirmationModal
+                open={showPdfConfirm}
+                filename={uploadedFile?.originalname}
+                onAdd={handleAddTransactions}
+                onDiscard={handleDiscard}
+                loading={uploading}
+              />
+              <SuccessModal
+                open={showSuccess}
+                onClose={() => setShowSuccess(false)}
+                message={successMessage}
+                onGoToTransactions={handleGoToTransactions}
+              />
             </div>
           </DialogPanel>
         </div>

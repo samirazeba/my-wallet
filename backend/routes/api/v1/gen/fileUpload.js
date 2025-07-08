@@ -33,4 +33,6 @@ router.post(
   }
 );
 
+router.post("/delete-pdf", fileUploadController.deleteFile);
+
 module.exports = router;

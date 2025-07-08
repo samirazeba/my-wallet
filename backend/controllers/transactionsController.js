@@ -445,6 +445,8 @@ exports.saveParsedTransactionsInternal = async function (userId, parsedData) {
   // 1. Check if bank account exists for this user and account number
   let bankAccount = await bankAccountsModel.findBankAccountByNumber(userId, bank_account);
 
+  let newBankAccountCreated = false;
+
   if (!bankAccount) {
     // 2. If not, add it with parsed balance and first transaction date as created_at
     const firstTxDate = transactions.length > 0 ? toISODate(transactions[0].date) : null;
@@ -456,6 +458,7 @@ exports.saveParsedTransactionsInternal = async function (userId, parsedData) {
       firstTxDate // Make sure your addBankAccount supports created_at as the 5th argument
     );
     bankAccount = { id: newAccountId, account_number: bank_account };
+    newBankAccountCreated = true;
   }
 
   // Fetch all categories once for mapping
@@ -518,6 +521,7 @@ exports.saveParsedTransactionsInternal = async function (userId, parsedData) {
     skipped,
     errors,
     results,
+    newBankAccountCreated
   };
 };
 
