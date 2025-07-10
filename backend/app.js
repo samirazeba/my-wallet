@@ -19,6 +19,7 @@ const categoriesRoutes = require("./routes/api/v1/gen/categories");
 const bankAccountsRoutes = require("./routes/api/v1/gen/bankAccounts");
 const jobsRoutes = require("./routes/api/v1/gen/jobs");
 const fileUploadRoutes = require("./routes/api/v1/gen/fileUpload");
+const emailVerifications = require("./routes/api/v1/gen/emailVerifications");
 
 
 app.use("/api/v1/gen/users", userRoutes);
@@ -31,3 +32,4 @@ app.listen (3000, ()=> {
     console.log ('Server is running on port 3000');
 });
 app.use("/api/v1/gen/file-upload", fileUploadRoutes);
+app.use("/api/v1/gen/email-verifications", emailVerifications);

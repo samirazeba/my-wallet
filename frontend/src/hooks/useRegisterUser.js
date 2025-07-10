@@ -11,7 +11,7 @@ const useRegisterUser = () => {
     setError(null);
 
     try {
-      const response = await axios.post("http://localhost:3000/api/v1/gen/users/register", {
+      const response = await axios.post("http://localhost:3000/api/v1/gen/email-verifications/register", {
         first_name,
         last_name,
         email,
