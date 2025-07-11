@@ -140,7 +140,7 @@ const LogInForm = () => {
             </div>
             <div className="text-right">
               <a
-                href="#"
+                href="/forgot-password"
                 className="font-semibold hover:text-[#3949AB] block text-sm font-medium text-gray-700"
               >
                 Forgot password?

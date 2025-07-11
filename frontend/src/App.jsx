@@ -17,6 +17,8 @@ import SavingGoals from './pages/SavingGoals.jsx';
 import SavingGoalsHistory from './pages/SavingGoalsHistory.jsx';
 import Profile from './pages/Profile.jsx';
 import EmailVerification from './pages/EmailVerification.jsx';
+import ForgotPassword from './pages/ForgotPassword.jsx';
+import ResetPassword from './pages/ResetPassword.jsx';
 
 function App() {
   return (
@@ -37,6 +39,8 @@ function App() {
             <Route path="/saving-goals-history" element={<SavingGoalsHistory />} />
             <Route path="/profile" element={<Profile />} /> 
             <Route path="/verify-email" element={<EmailVerification />} />
+            <Route path="/forgot-password" element={<ForgotPassword/>} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
           </Routes>
         </div>
       </div>

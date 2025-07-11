@@ -35,3 +35,44 @@ exports.sendVerificationEmail = async (email, name, code) => {
     return false;
   }
 };
+
+exports.sendPasswordResetEmail = async (email, name, token) => {
+  const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+
+  const msg = {
+    to: email,
+    from: process.env.SENDER_EMAIL,
+    subject: "Password Reset Request - My Wallet",
+    text: `Password Reset Link: ${resetLink}\n\nThis link expires in 5 minutes.`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #4a5568;">Hello ${name},</h2>
+        <p>You requested to reset your password for My Wallet.</p>
+        <p>Please click the button below to reset your password:</p>
+        <div style="margin: 20px 0;">
+          <a href="${resetLink}" 
+             style="background-color: #f3f4f6; color: black; padding: 10px 20px; 
+                    text-decoration: none; border-radius: 4px; display: inline-block;">
+            Reset Password
+          </a>
+        </div>
+        <p>If you didn't request this, please ignore this email.</p>
+        <p style="margin-top: 30px; color: #718096; font-size: 12px;">
+          This link will expire in 5 minutes for security reasons.
+        </p>
+      </div>
+    `,
+  };
+
+  try {
+    await sgMail.send(msg);
+    console.log("Password reset email sent to:", email);
+    return true;
+  } catch (error) {
+    console.error("Error sending password reset email:", error);
+    if (error.response) {
+      console.error(error.response.body);
+    }
+    return false;
+  }
+};
