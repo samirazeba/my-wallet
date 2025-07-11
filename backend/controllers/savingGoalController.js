@@ -1,4 +1,5 @@
 const savingGoalModel = require("../models/savingGoalModel");
+const bankAccountsModel = require("../models/bankAccountsModel");
 const aiService = require("../services/aiServices");
 
 exports.addSavingGoal = async (req, res) => {
@@ -181,5 +182,75 @@ exports.getSavingGoalsHistoryByUserId = async (req, res) => {
   } catch (error) {
     console.error("Get saving goals history error: ", error);
     res.status(500).json({ message: "Error fetching saving goals history" });
+  }
+};
+
+exports.addToSavingGoal = async (req, res) => {
+  try {
+    const { goal_id, bank_account_id, amount } = req.body;
+    const user_id = req.user.id;
+
+    if (!goal_id || !bank_account_id || !amount || amount <= 0) {
+      return res.status(400).json({ error: "Missing or invalid fields." });
+    }
+
+    // 1. Get bank account and check balance
+    const bankAccount = await bankAccountsModel.getBankAccountById(bank_account_id, user_id);
+    if (!bankAccount) {
+      return res.status(404).json({ error: "Bank account not found." });
+    }
+    if (bankAccount.balance < amount) {
+      return res.status(400).json({ error: "Insufficient balance." });
+    }
+
+    // 2. Deduct from bank account
+    await bankAccountsModel.updateBankAccountBalance(bank_account_id, amount);
+
+    // 3. Add to saving goal
+    await savingGoalModel.addToSavingGoal(goal_id, user_id, bank_account_id, amount);
+
+    // 4. Return updated goal
+    const updatedGoal = await savingGoalModel.getSavingGoalById(goal_id);
+    res.status(200).json({
+      message: "Amount added to saving goal.",
+      goal: updatedGoal,
+    });
+  } catch (error) {
+    console.error("Add to saving goal error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};exports.addToSavingGoal = async (req, res) => {
+  try {
+    const { goal_id, bank_account_id, amount } = req.body;
+    const user_id = req.user.id;
+
+    if (!goal_id || !bank_account_id || !amount || amount <= 0) {
+      return res.status(400).json({ error: "Missing or invalid fields." });
+    }
+
+    // 1. Get bank account and check balance
+    const bankAccount = await bankAccountsModel.getBankAccountById(bank_account_id, user_id);
+    if (!bankAccount) {
+      return res.status(404).json({ error: "Bank account not found." });
+    }
+    if (bankAccount.balance < amount) {
+      return res.status(400).json({ error: "Insufficient balance." });
+    }
+
+    // 2. Deduct from bank account
+    await bankAccountsModel.updateBankAccountBalance(bank_account_id, amount);
+
+    // 3. Add to saving goal
+    await savingGoalModel.addToSavingGoal(goal_id, user_id, bank_account_id, amount);
+
+    // 4. Return updated goal
+    const updatedGoal = await savingGoalModel.getSavingGoalById(goal_id);
+    res.status(200).json({
+      message: "Amount added to saving goal.",
+      goal: updatedGoal,
+    });
+  } catch (error) {
+    console.error("Add to saving goal error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };

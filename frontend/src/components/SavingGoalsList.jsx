@@ -2,23 +2,34 @@ import React, { useState } from "react";
 import ConfirmModal from "./ConfirmModal";
 import AddSavingGoalModal from "./AddSavingGoalModal";
 import EditSavingGoalModal from "./EditSavingGoalModal";
+import AddToSavingGoalModal from "./AddToSavingGoalModal";
 import useDeleteSavingGoal from "../hooks/useDeleteSavingGoal";
 import useAddSavingGoal from "../hooks/useAddSavingGoal";
 import useEditSavingGoal from "../hooks/useEditSavingGoal";
+import useAddToSavingGoal from "../hooks/useAddToSavingGoal";
 import { useNavigate } from "react-router-dom";
 import { History } from "lucide-react";
 
-export default function SavingGoalsList({ goals, loading, error, onRefresh }) {
+export default function SavingGoalsList({
+  goals,
+  loading,
+  error,
+  onRefresh,
+  accounts,
+}) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [goalToDelete, setGoalToDelete] = useState(null);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedGoal, setSelectedGoal] = useState(null);
+  const [showAddToGoalModal, setShowAddToGoalModal] = useState(false);
+
   const navigate = useNavigate();
 
   const { deleteSavingGoal, loading: deleteLoading } = useDeleteSavingGoal();
   const { addSavingGoal, loading: addLoading } = useAddSavingGoal();
   const { editSavingGoal, loading: editLoading } = useEditSavingGoal();
+  const { addToSavingGoal, loading: loadingAdd } = useAddToSavingGoal();
 
   const handleDelete = (goal) => {
     setGoalToDelete(goal);
@@ -57,6 +68,19 @@ export default function SavingGoalsList({ goals, loading, error, onRefresh }) {
     }
   };
 
+  const handleAddToGoal = async (form) => {
+    if (!selectedGoal) return;
+    const result = await addToSavingGoal({
+      goal_id: selectedGoal.id,
+      bank_account_id: form.bank_account_id,
+      amount: form.amount,
+    });
+    setShowAddToGoalModal(false);
+    setSelectedGoal(null);
+    if (result) onRefresh?.();
+    else alert("Failed to add to saving goal.");
+  };
+
   function cleanAIResponse(ai_response) {
     if (!ai_response) return "";
     return ai_response.replace(/<think>[\s\S]*?<\/think>\s*/i, "").trim();
@@ -78,7 +102,6 @@ export default function SavingGoalsList({ goals, loading, error, onRefresh }) {
           title="View History"
           onClick={() => navigate("/saving-goals-history")}
         >
-          {/* Use an available icon, e.g. FaHistory from react-icons */}
           <History className="w-5 h-5 text-gray-700" />
         </button>
       </div>
@@ -87,6 +110,13 @@ export default function SavingGoalsList({ goals, loading, error, onRefresh }) {
         onClose={() => setAddModalOpen(false)}
         onSubmit={handleAddGoal}
         loading={addLoading}
+      />
+      <AddToSavingGoalModal
+        open={showAddToGoalModal}
+        onClose={() => setShowAddToGoalModal(false)}
+        onSubmit={handleAddToGoal}
+        loading={loadingAdd}
+        accounts={accounts}
       />
       {loading && (
         <div className="text-center py-6 text-gray-500">Loading...</div>
@@ -139,12 +169,56 @@ export default function SavingGoalsList({ goals, loading, error, onRefresh }) {
                   ? new Date(goal.created_at).toLocaleString()
                   : ""}
               </div>
+              {typeof goal.current_amount !== "undefined" && (
+                <div className="mt-2">
+                  <div className="flex justify-between text-xs text-gray-500 mb-1">
+                    <span>Progress</span>
+                    <span>
+                      {Number(goal.current_amount).toLocaleString()} /{" "}
+                      {Number(goal.target_amount).toLocaleString()}{" "}
+                      {goal.currency || "BAM"}
+                    </span>
+                  </div>
+                  <div className="w-full bg-[#b3c7e6]/30 rounded-full h-3">
+                    <div
+                      className="bg-[#b3c7e6] h-3 rounded-full transition-all duration-300"
+                      style={{
+                        width: `${Math.min(
+                          (goal.current_amount / goal.target_amount) * 100,
+                          100
+                        )}%`,
+                      }}
+                    ></div>
+                  </div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    {goal.target_amount - goal.current_amount > 0
+                      ? `You need ${Number(
+                          goal.target_amount - goal.current_amount
+                        ).toLocaleString()} ${
+                          goal.currency || "BAM"
+                        } more to reach your goal.`
+                      : "Goal reached!"}
+                  </div>
+                </div>
+              )}
+              <button
+                className="bg-[#b3c7e6] text-base font-semibold text-gray-700 shadow-sm hover:bg-[#9bb6db] px-4 py-1.5 rounded transition mt-2"
+                onClick={() => {
+                  setSelectedGoal(goal);
+                  setShowAddToGoalModal(true);
+                }}
+              >
+                Add to Goal
+              </button>
             </div>
             <div className="flex flex-col gap-2 ml-4">
               <button
                 className="text-gray-400 hover:text-blue-600"
                 title="Edit"
-                onClick={() => handleEdit(goal)}
+                onClick={() => {
+                  setSelectedGoal(goal);
+                  setEditModalOpen(true);
+                }}
               >
                 <i className="fa fa-edit" />
               </button>

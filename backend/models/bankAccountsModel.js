@@ -48,3 +48,19 @@ exports.findBankAccountByNumber = async (user_id, account_number) => {
   );
   return rows[0] || null;
 };
+
+exports.getBankAccountById = async (bank_account_id, user_id) => {
+  const [rows] = await db.query(
+    "SELECT * FROM bank_accounts WHERE id = ? AND user_id = ? AND is_deleted = 0",
+    [bank_account_id, user_id]
+  );
+  return rows[0];
+};
+
+exports.updateBankAccountBalance = async (bank_account_id, amount) => {
+  const [result] = await db.query(
+    "UPDATE bank_accounts SET balance = balance - ? WHERE id = ?",
+    [amount, bank_account_id]
+  );
+  return result.affectedRows > 0;
+};

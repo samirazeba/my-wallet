@@ -137,3 +137,22 @@ exports.expireOldSavingGoals = async () => {
   );
   return result;
 };
+
+exports.addToSavingGoal = async (goal_id, user_id, bank_account_id, amount) => {
+  // 1. Insert transaction record
+  await db.query(
+    `INSERT INTO saving_goal_transactions (saving_goal_id, user_id, bank_account_id, amount) VALUES (?, ?, ?, ?)`,
+    [goal_id, user_id, bank_account_id, amount]
+  );
+  // 2. Update current_saved_amount
+  const [result] = await db.query(
+    `UPDATE saving_goals SET current_amount = current_amount + ? WHERE id = ?`,
+    [amount, goal_id]
+  );
+  return result;
+};
+
+exports.getSavingGoalById = async (id) => {
+  const [rows] = await db.query("SELECT * FROM saving_goals WHERE id = ?", [id]);
+  return rows[0];
+};
