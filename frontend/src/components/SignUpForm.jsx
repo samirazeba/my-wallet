@@ -17,18 +17,19 @@ const SignUpForm = () => {
 
   // Timer and redirect after successful registration
   useEffect(() => {
-    if (success) {
-      const timer = setTimeout(() => {
-        navigate("/verify-email", {
-          state: {
-            email,
-            info: "A verification code has been sent to your email.",
-          },
-        });
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [success, navigate, email]);
+  if (success) {
+    localStorage.setItem("email_verification_pending", "true");
+    const timer = setTimeout(() => {
+      navigate("/verify-email", {
+        state: {
+          email,
+          info: "A verification code has been sent to your email.",
+        },
+      });
+    }, 3000);
+    return () => clearTimeout(timer);
+  }
+}, [success, navigate, email]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useForgotPassword from "../hooks/useForgotPassword";
 
 const ForgotPasswordForm = () => {
   const [email, setEmail] = useState("");
   const { sendForgotPassword, loading, error, success } = useForgotPassword();
+
+  useEffect(() => {
+    if (success) {
+      localStorage.setItem("forgot_password_started", "true");
+    }
+  }, [success]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

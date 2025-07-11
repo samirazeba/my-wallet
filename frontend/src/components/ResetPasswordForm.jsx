@@ -12,6 +12,7 @@ const ResetPasswordForm = ({ token }) => {
 
   useEffect(() => {
     if (success) {
+      localStorage.removeItem("forgot_password_strated");
       // Redirect to login after 2 seconds
       const timer = setTimeout(() => {
         navigate("/login");

@@ -19,6 +19,7 @@ const EmailVerificationForm = ({ email }) => {
 
   useEffect(() => {
     if (success) {
+      localStorage.removeItem("email_verification_pending");
       const timer = setTimeout(() => {
         navigate("/login");
       }, 3000);
