@@ -19,6 +19,7 @@ import Profile from './pages/Profile.jsx';
 import EmailVerification from './pages/EmailVerification.jsx';
 import ForgotPassword from './pages/ForgotPassword.jsx';
 import ResetPassword from './pages/ResetPassword.jsx';
+import ChangePassword from './pages/ChangePassword.jsx';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
             <Route path="/verify-email" element={<EmailVerification />} />
             <Route path="/forgot-password" element={<ForgotPassword/>} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/change-password" element={<ChangePassword/>} />
           </Routes>
         </div>
       </div>

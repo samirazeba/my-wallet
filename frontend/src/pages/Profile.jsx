@@ -8,6 +8,7 @@ import useAddBankAccount from "../hooks/useAddBankAccount";
 import useUserInfo from "../hooks/useUserInfo";
 import useDeleteBankAccount from "../hooks/useDeleteBankAccount";
 import ConfirmModal from "../components/ConfirmModal";
+import {useNavigate} from "react-router-dom";
 
 const Profile = () => {
   const user = useUserInfo();
@@ -15,6 +16,7 @@ const Profile = () => {
   const { addBankAccount, loading, error } = useAddBankAccount();
   const [refresh, setRefresh] = useState(false);
   const { deleteBankAccount, loading: deleteLoading } = useDeleteBankAccount();
+  const navigate = useNavigate();
 
   // State for confirm modal
   const [showConfirm, setShowConfirm] = useState(false);
@@ -56,6 +58,14 @@ const Profile = () => {
           email={user?.email}
           phone={user?.phone_number}
         />
+        <div className="flex justify-start mb-4">
+          <button
+            className="bg-[#b3c7e6] text-base font-semibold text-gray-700 shadow-sm hover:bg-[#9bb6db] px-4 py-1.5 rounded transition"
+            onClick={() => navigate("/change-password")}
+          >
+            Change Password
+          </button>
+        </div>
         <div className="flex items-center justify-between mt-8 mb-2 ml-4 mr-4">
           <h2 className="text-lg font-semibold">Bank Accounts</h2>
           <button

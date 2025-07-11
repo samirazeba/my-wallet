@@ -103,3 +103,20 @@ exports.updatePasswordById = async function (userId, hashedPassword) {
         [hashedPassword, userId]
     );
 };
+
+////////////////////////////// Change Password /////////////////////
+
+exports.changePassword = async function (userId, currentPassword, newPassword, bcrypt) {
+    // 1. Fetch user
+    const [rows] = await db.query("SELECT * FROM users WHERE id = ?", [userId]);
+    const user = rows[0];
+    if (!user) return { success: false, message: "User not found." };
+
+    // 2. Check current password
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) return { success: false, message: "Current password is incorrect." };
+
+    // 3. Update password
+    await db.query("UPDATE users SET password = ? WHERE id = ?", [newPassword, userId]);
+    return { success: true };
+};

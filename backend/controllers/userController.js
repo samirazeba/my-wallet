@@ -283,3 +283,44 @@ exports.resetPassword = async (req, res) => {
     });
   }
 };
+
+/////////////////////////// Change Password /////////////////////
+exports.changePassword = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { current_password, new_password } = req.body;
+
+    if (!current_password || !new_password) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
+
+    // Validate new password using registration validation
+    const { valid, errors } = await validateRegistrationInput(
+      {
+        first_name: "tmp",
+        last_name: "tmp",
+        email: "tmp@tmp.com",
+        password: new_password,
+        phone_number: "+38761111111",
+      },
+      []
+    );
+    if (!valid && errors.password) {
+      return res.status(400).json({ message: errors.password });
+    }
+
+    // Hash new password
+    const hashedNewPassword = await bcrypt.hash(new_password, 10);
+
+    // Change password in model
+    const result = await userModel.changePassword(userId, current_password, hashedNewPassword, bcrypt);
+    if (!result.success) {
+      return res.status(400).json({ message: result.message });
+    }
+
+    res.json({ message: "Password changed successfully." });
+  } catch (error) {
+    console.error("Change password error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
