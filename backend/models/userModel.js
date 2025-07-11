@@ -13,7 +13,7 @@ exports.register = async (first_name, last_name, email, password, phone_number) 
     return rows;
 };
 
-exports.findUserByEmail = async (email) => {
+exports.getUserByEmail = async (email) => {
     const [rows] = await db.query(
         "SELECT * FROM users WHERE email = ?",
         [email]

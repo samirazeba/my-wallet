@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useRegisterUser from "../hooks/useRegisterUser";
 import Logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
@@ -15,8 +15,27 @@ const SignUpForm = () => {
 
   const navigate = useNavigate();
 
+  // Timer and redirect after successful registration
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        navigate("/verify-email", {
+          state: {
+            email,
+            info: "A verification code has been sent to your email.",
+          },
+        });
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, navigate, email]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
     const response = await registerUser(
       firstName,
       lastName,
@@ -24,13 +43,14 @@ const SignUpForm = () => {
       phoneNumber,
       password
     );
-    if (response && (response.success || response.message === "Verification code sent.")) {
-      navigate("/verify-email", {
-        state: {
-          email,
-          info: "A verification code has been sent to your email.",
-        },
-      });
+    if (
+      response &&
+      (response.success ||
+        response.message ===
+          "Verification code sent to your email. Please verify to complete registration." ||
+        response.message === "Verification code sent.")
+    ) {
+      setSuccess(true);
     }
   };
 
@@ -204,6 +224,11 @@ const SignUpForm = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="mt-2 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-base text-gray-900 placeholder:text-gray-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 outline-none transition"
               />
+              {password !== confirmPassword && (
+                <p className="text-red-500 text-xs mt-1">
+                  Passwords do not match.
+                </p>
+              )}
             </div>
           </div>
 
@@ -216,8 +241,15 @@ const SignUpForm = () => {
             >
               {loading ? "Loading..." : "Sign Up"}
             </button>
-            {error && <div className="text-red-500">{error}</div>}
+            {error?.general && (
+              <div className="text-red-500 mt-2">{error.general}</div>
+            )}
           </div>
+          {success && (
+            <div className="text-green-600 text-center">
+              Verification email sent! Redirecting to email verification page...
+            </div>
+          )}
         </form>
 
         <p className="mt-8 text-center text-sm text-gray-500">
