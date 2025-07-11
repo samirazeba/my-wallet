@@ -8,11 +8,21 @@ import RecentTransactions from "../components/RecentTransactions";
 import UpcomingBillsBox from "../components/UpcomingBillsBox";
 import MonthlyExpensesChart from "../components/MonthlyExpensesChart";
 import Modal from "../components/Modal";
+import AddBankAccountModal from "../components/AddBankAccountModal";
+import useAddBankAccount from "../hooks/useAddBankAccount";
 
 const Home = () => {
+  const {
+    addBankAccount,
+    loading: addBankLoading,
+    error: addBankError,
+  } = useAddBankAccount();
+
   const [selectedAccount, setSelectedAccount] = useState("");
   const [dateFilter, setDateFilter] = useState(null);
   const [expiredGoal, setExpiredGoal] = useState(null);
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [refreshAccounts, setRefreshAccounts] = useState(false);
 
   useEffect(() => {
     const userId = localStorage.getItem("user_id");
@@ -38,6 +48,23 @@ const Home = () => {
     }
   };
 
+  const handleAddBankAccount = async (form) => {
+    try {
+      const user_id = localStorage.getItem("user_id");
+      const success = await addBankAccount({ ...form, user_id });
+      if (success) {
+        setAddModalOpen(false);
+        // Trigger refresh by toggling the state
+        setRefreshAccounts(prev => !prev);
+      } else {
+        // Error will be displayed in AddBankAccountModal via addBankError
+        console.error("Failed to add bank account");
+      }
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    }
+  };
+
   return (
     <div className="flex bg-gray-50 min-h-screen">
       <Sidebar />
@@ -49,7 +76,11 @@ const Home = () => {
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <BankAccountBox selectedAccount={selectedAccount} />
+            <BankAccountBox
+              selectedAccount={selectedAccount}
+              onAddBankAccount={() => setAddModalOpen(true)}
+              refresh={refreshAccounts}
+            />
             <ExpensesIncomeBar
               selectedAccount={selectedAccount}
               dateFilter={dateFilter}
@@ -97,6 +128,13 @@ const Home = () => {
             </div>
           </Modal>
         )}
+      <AddBankAccountModal
+          open={addModalOpen}
+          onClose={() => setAddModalOpen(false)}
+          onSubmit={handleAddBankAccount}
+          loading={addBankLoading}
+          error={addBankError}
+        />
       </div>
     </div>
   );
