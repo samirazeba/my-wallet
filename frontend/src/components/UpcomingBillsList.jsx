@@ -40,18 +40,6 @@ export default function UpcomingBillsList({
     }
   };
 
-  /*
-  const handleDelete = async (billId) => {
-    if (window.confirm("Are you sure you want to delete this bill?")) {
-      setDeleteLoading(true);
-      const success = await deleteUpcomingBill(billId);
-      setDeleteLoading(false);
-      if (success) {
-        onRefresh?.();
-      }
-    }
-  };*/
-
   const handleAddBill = async (form) => {
     const userId = localStorage.getItem("user_id");
     const success = await addBill({ ...form, user_id: userId });
@@ -60,6 +48,7 @@ export default function UpcomingBillsList({
       onRefresh?.();
     }
   };
+
   const handleConfirmDelete = async () => {
     if (!billToDelete) return;
     setDeleteLoading(true);
@@ -81,15 +70,20 @@ export default function UpcomingBillsList({
   if (!bills.length) {
     return (
       <>
-        <div className="flex justify-end mb-4">
-          <button className="bg-[#b3c7e6] text-base font-semibold text-gray-700 shadow-sm hover:bg-[#9bb6db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 px-4 py-1.5 rounded transition">Add Upcoming Bill</button>
+        <div className="flex justify-start mb-4 ml-8">
+          <button 
+            className="bg-[#b3c7e6] text-base font-semibold text-gray-700 shadow-sm hover:bg-[#9bb6db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 px-4 py-1.5 rounded transition"
+            onClick={() => setAddModalOpen(true)}
+          >
+            Add Upcoming Bill
+          </button>
         </div>
         <AddUpcomingBillModal
           open={addModalOpen}
           onClose={() => setAddModalOpen(false)}
           onSubmit={handleAddBill}
           loading={addLoading}
-          userId={localStorage.getItem("userId")}
+          userId={localStorage.getItem("user_id")}
           defaultBankAccountId={selectedAccount}
         />
         <div className="text-center py-6 text-gray-500">
@@ -101,7 +95,7 @@ export default function UpcomingBillsList({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-strat mb-4 ml-8">
+      <div className="flex justify-start mb-4 ml-8">
         <button
           className="bg-[#b3c7e6] text-base font-semibold text-gray-700 shadow-sm hover:bg-[#9bb6db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 px-4 py-1.5 rounded transition"
           onClick={() => setAddModalOpen(true)}

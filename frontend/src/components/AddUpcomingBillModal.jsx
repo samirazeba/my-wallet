@@ -62,7 +62,11 @@ export default function AddUpcomingBillModal({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(form);
+    if (form.bank_account_id) {
+      onSubmit(form);
+    } else {
+      alert("Please select a bank account");
+    }
   };
 
   return (

@@ -199,6 +199,7 @@ exports.addUpcomingBill = async (req, res) => {
   try {
     const {
       user_id,
+      bank_account_id,
       category_id,
       name,
       beneficiary,
@@ -213,6 +214,7 @@ exports.addUpcomingBill = async (req, res) => {
     } = req.body;
     if (
       user_id === undefined ||
+      bank_account_id === undefined ||
       category_id === undefined ||
       name === undefined ||
       beneficiary === undefined ||
@@ -228,6 +230,7 @@ exports.addUpcomingBill = async (req, res) => {
     }
     const bill = await transactionsModel.addUpcomingBill(
       user_id,
+      bank_account_id,
       category_id,
       name,
       beneficiary,
