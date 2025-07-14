@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../assets/logo.png";
-import useLogInUser from "../hooks/useLoginUser";
+import useLogInUser from "../hooks/useLogInUser";
 
 const LogInForm = () => {
   const { logInUser, error, loading } = useLogInUser();
