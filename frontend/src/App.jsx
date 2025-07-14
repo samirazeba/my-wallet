@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-import "./app.css";
+import "./App.css";
 import SplashScreen from "./pages/SplashScreen.jsx";
 import Home from "./pages/Home.jsx";
 import SignUp from "./pages/SignUp.jsx";

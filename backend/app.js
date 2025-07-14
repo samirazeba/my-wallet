@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const db = require("./config/db");
+const session = require("express-session");
 
 app.use(express.json());
 
