@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function AddTransactionModal({ open, onClose, onSubmit, loading, defaultBankAccountId }) {
   const categories = useCategories();
-  const accounts = useBankAccounts();
+  const { accounts, loading: accountsLoading } = useBankAccounts(); // Destructure the hook
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -153,9 +153,12 @@ export default function AddTransactionModal({ open, onClose, onSubmit, loading, 
                   onChange={handleChange}
                   required
                   className="w-full border rounded p-2"
+                  disabled={accountsLoading}
                 >
-                  <option value="">Select your bank account</option>
-                  {accounts.map(acc => (
+                  <option value="">
+                    {accountsLoading ? "Loading accounts..." : "Select your bank account"}
+                  </option>
+                  {accounts && accounts.map(acc => (
                     <option key={acc.id} value={acc.id}>
                       {acc.bank_name} - {acc.account_number}
                     </option>

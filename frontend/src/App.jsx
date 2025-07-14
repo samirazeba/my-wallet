@@ -28,13 +28,6 @@ import ChangePassword from "./pages/ChangePassword.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import PublicRoute from "./components/PublicRoute.jsx";
 
-const canAccessEmailVerification = !!localStorage.getItem(
-  "email_verification_pending"
-);
-const canAccessResetPassword = !!localStorage.getItem(
-  "forgot_password_strated"
-);
-
 function App() {
   return (
     <Router>
@@ -137,34 +130,10 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/verify-email"
-              element={
-                canAccessEmailVerification ? (
-                  <EmailVerification />
-                ) : (
-                  <Navigate to="/signup" replace />
-                )
-              }
-            />
-            <Route
-              path="/forgot-password"
-              element={
-                <PublicRoute>
-                  <ForgotPassword />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/reset-password/:token"
-              element={
-                canAccessResetPassword ? (
-                  <ResetPassword />
-                ) : (
-                  <Navigate to="/login" replace />
-                )
-              }
-            />
+            <Route path="/verify-email" element={<EmailVerification />} />
+
+            <Route path="/forgot-password" element={<ForgotPassword/>} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route
               path="/change-password"
               element={

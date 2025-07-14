@@ -12,6 +12,7 @@ const ChangePasswordForm = () => {
 
   useEffect(() => {
     if (success) {
+      localStorage.removeItem("jwt_token");
       const timer = setTimeout(() => {
         navigate("/login");
       }, 3000); // 3 seconds

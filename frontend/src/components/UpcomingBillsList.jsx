@@ -82,7 +82,7 @@ export default function UpcomingBillsList({
     return (
       <>
         <div className="flex justify-end mb-4">
-          <button class="bg-[#b3c7e6] text-base font-semibold text-gray-700 shadow-sm hover:bg-[#9bb6db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 px-4 py-1.5 rounded transition">Add Upcoming Bill</button>
+          <button className="bg-[#b3c7e6] text-base font-semibold text-gray-700 shadow-sm hover:bg-[#9bb6db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 px-4 py-1.5 rounded transition">Add Upcoming Bill</button>
         </div>
         <AddUpcomingBillModal
           open={addModalOpen}

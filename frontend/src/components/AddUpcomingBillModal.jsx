@@ -17,7 +17,7 @@ export default function AddUpcomingBillModal({
   defaultBankAccountId,
 }) {
   const categories = useCategories();
-  const accounts = useBankAccounts();
+  const { accounts, loading: accountsLoading } = useBankAccounts(); // Destructure the hook
 
   const [form, setForm] = useState({
     user_id: userId || "",
@@ -133,9 +133,12 @@ export default function AddUpcomingBillModal({
                   onChange={handleChange}
                   required
                   className="w-full border rounded p-2"
+                  disabled={accountsLoading} // Disable while loading
                 >
-                  <option value="">Select your bank account</option>
-                  {accounts.map((acc) => (
+                  <option value="">
+                    {accountsLoading ? "Loading accounts..." : "Select your bank account"}
+                  </option>
+                  {accounts && accounts.map((acc) => (
                     <option key={acc.id} value={acc.id}>
                       {acc.bank_name} - {acc.account_number}
                     </option>

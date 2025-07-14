@@ -18,7 +18,7 @@ const SignUpForm = () => {
   // Timer and redirect after successful registration
   useEffect(() => {
   if (success) {
-    localStorage.setItem("email_verification_pending", "true");
+    //localStorage.setItem("email_verification_pending", "true");
     const timer = setTimeout(() => {
       navigate("/verify-email", {
         state: {

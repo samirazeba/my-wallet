@@ -5,12 +5,6 @@ const ForgotPasswordForm = () => {
   const [email, setEmail] = useState("");
   const { sendForgotPassword, loading, error, success } = useForgotPassword();
 
-  useEffect(() => {
-    if (success) {
-      localStorage.setItem("forgot_password_started", "true");
-    }
-  }, [success]);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     sendForgotPassword(email);
