@@ -1,7 +1,8 @@
 import axios from "axios";
 
+
 const axiosInstance = axios.create({
-    baseURL: "http://localhost:3000/api/v1/gen",
+    baseURL: import.meta.env.REACT_APP_API_URL || "http://localhost:5000/api",
 });
 
 axiosInstance.interceptors.request.use(
