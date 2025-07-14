@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 
 const useLogInUser = () => {
     const [user, setUser] = useState(null);
@@ -11,7 +11,7 @@ const useLogInUser = () => {
         setError(null);
 
         try {
-            const response = await axios.post("http://localhost:3000/api/v1/gen/users/login", { email, password });
+            const response = await axiosInstance.post("/users/login", { email, password });
             setUser(response.data.user);
 
             if (response.data.token) {

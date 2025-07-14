@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 
 export default function useUserFullName() {
     const [fullName, setFullName] = useState("");
@@ -9,16 +9,16 @@ export default function useUserFullName() {
     useEffect(() => {
         const fetchFullName = async () => {
             try {
-                const userId = localStorage.getItem("user_id"); // Make sure you store this at login!
+                const userId = localStorage.getItem("user_id");
                 if (!userId) {
                     throw new Error("User ID not found in localStorage");
                 }
 
-                const response = await axios.get(`http://localhost:3000/api/v1/gen/users/getFullName/${userId}`);
+                const response = await axiosInstance.get(`/users/getFullName/${userId}`);
                 console.log("Full name response:", response.data);
                 setFullName(response.data.fullName);
             } catch (err) {
-                setError(err.message || "Error fetching full name");
+                setError(err.response?.data?.message || err.message || "Error fetching full name");
             } finally {
                 setLoading(false);
             }
