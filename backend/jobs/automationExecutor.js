@@ -61,13 +61,13 @@ async function executeAutomations() {
       );
     }
     if (automations.length > 0) {
-        console.log(`Executed ${automations.length} automations.`);
+      console.log(`Executed ${automations.length} automations.`);
     }
   } catch (err) {
     console.error("Error executing automations:", err);
   }
 }
 
-cron.schedule("15 15 * * *", executeAutomations);
+cron.schedule("40 15 * * *", executeAutomations);
 
-module.exports = {executeAutomations};
+module.exports = { executeAutomations };
