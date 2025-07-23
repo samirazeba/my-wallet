@@ -28,7 +28,7 @@ router.post(
       res.status(201).json(result);
     } catch (error) {
       console.error("Parse and save error:", error); // <--- This will show the real error!
-      res.status(500).json({ error: "Failed to parse and save transactions" });
+      res.status(500).json({ error: error.message || "Failed to parse and save transactions" });
     }
   }
 );
