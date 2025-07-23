@@ -446,13 +446,17 @@ exports.saveParsedTransactionsInternal = async function (userId, parsedData) {
   const { transactions, bank_account, balance } = parsedData;
 
   // 1. Check if bank account exists for this user and account number
-  let bankAccount = await bankAccountsModel.findBankAccountByNumber(userId, bank_account);
+  let bankAccount = await bankAccountsModel.findBankAccountByNumber(
+    userId,
+    bank_account
+  );
 
   let newBankAccountCreated = false;
 
   if (!bankAccount) {
     // 2. If not, add it with parsed balance and first transaction date as created_at
-    const firstTxDate = transactions.length > 0 ? toISODate(transactions[0].date) : null;
+    const firstTxDate =
+      transactions.length > 0 ? toISODate(transactions[0].date) : null;
     const newAccountId = await bankAccountsModel.addBankAccount(
       userId,
       "UniCredit Bank",
@@ -475,8 +479,9 @@ exports.saveParsedTransactionsInternal = async function (userId, parsedData) {
     // Map category name to ID
     const categoryName = tx.category || "Other";
     const categoryObj =
-      categories.find((c) => c.name.toLowerCase() === categoryName.toLowerCase()) ||
-      categories.find((c) => c.name.toLowerCase() === "other");
+      categories.find(
+        (c) => c.name.toLowerCase() === categoryName.toLowerCase()
+      ) || categories.find((c) => c.name.toLowerCase() === "other");
 
     if (!categoryObj) {
       results.push({ ...tx, status: "error", reason: "Category not found" });
@@ -523,7 +528,7 @@ exports.saveParsedTransactionsInternal = async function (userId, parsedData) {
   }
 
   if (!newBankAccountCreated) {
-    await bankAccountModel.updateBankAccountBalance(
+    await bankAccountsModel.updateBankAccountBalance(
       bankAccount.id,
       netChange,
       "Income"
@@ -535,7 +540,7 @@ exports.saveParsedTransactionsInternal = async function (userId, parsedData) {
     skipped,
     errors,
     results,
-    newBankAccountCreated
+    newBankAccountCreated,
   };
 };
 
