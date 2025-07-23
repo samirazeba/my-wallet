@@ -69,5 +69,6 @@ async function executeAutomations() {
 }
 
 cron.schedule("03 13 * * *", executeAutomations);
+executeAutomations(); // Initial execution on server start
 
 module.exports = { executeAutomations };
