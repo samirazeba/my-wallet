@@ -21,13 +21,27 @@ export default function AddBankAccountModal({ open, onClose, onSubmit, loading, 
     account_number: "",
     balance: "",
   });
+  const [accountNumberError, setAccountNumberError] = useState("");
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    // Restrict account_number to max 16 digits
+    if (name === "account_number") {
+      // Only allow digits, and max 16
+      const digits = value.replace(/\D/g, "").slice(0, 16);
+      setForm({ ...form, [name]: digits });
+      setAccountNumberError(""); // Clear error on change
+    } else {
+      setForm({ ...form, [name]: value });
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (form.account_number.length !== 16) {
+      setAccountNumberError("Account number must be exactly 16 digits.");
+      return;
+    }
     onSubmit(form);
   };
 
@@ -57,8 +71,13 @@ export default function AddBankAccountModal({ open, onClose, onSubmit, loading, 
             required
             placeholder="Account Number"
             className="w-full border rounded p-2"
-            type="number"
+            type="text"
+            inputMode="numeric"
+            maxLength={16}
           />
+          {accountNumberError && (
+            <div className="text-red-500 text-sm">{accountNumberError}</div>
+          )}
           <input
             name="balance"
             value={form.balance}
