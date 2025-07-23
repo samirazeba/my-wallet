@@ -88,7 +88,7 @@ const TransactionsTable = ({
         <div className="text-red-600 text-center mb-2">{addError}</div>
       )}
       <div className="overflow-x-auto w-full shadow-md rounded-2xl">
-        <table className="w-full text-sm text-left border-separate border-spacing-0">
+        <table className="min-w-full text-sm text-left border-separate border-spacing-0">
           <thead>
             <tr>
               <th className="bg-[#b3c7e6] text-gray-700 font-semibold px-4 py-3 border-b border-gray-300 rounded-tl-2xl">
@@ -166,10 +166,10 @@ const TransactionsTable = ({
                   <td className="px-4 py-3 border-b border-gray-200">
                     {transaction.beneficiary}
                   </td>
-                  <td className="px-4 py-3 border-b border-gray-200">
+                  <td className="px-4 py-3 border-b border-gray-200 whitespace-nowrap">
                     {transaction.created_at}
                   </td>
-                  <td className="px-4 py-3 border-b border-gray-200">
+                  <td className="px-4 py-3 border-b border-gray-200 whitespace-nowrap">
                     {transaction.amount}
                   </td>
                   <td className="px-4 py-3 border-b border-gray-200 text-center">

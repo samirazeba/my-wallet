@@ -87,7 +87,7 @@ export default function SavingGoalsList({
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 overflow-x-auto w-full">
       <div className="flex items-center justify-between mb-2 ml-8">
         {/* Left: Add Saving Goal button */}
         <button
@@ -130,7 +130,7 @@ export default function SavingGoalsList({
       {goals.map((goal) => (
         <div
           key={goal.id}
-          className="bg-white shadow rounded-2xl p-4 border border-gray-200 mb-2"
+          className="flex flex-col md:flex-row items-start md:items-center justify-between bg-white rounded-2xl shadow px-4 py-6 border border-gray-200"
         >
           <div className="flex flex-row justify-between items-start">
             <div className="flex-1">
@@ -211,7 +211,7 @@ export default function SavingGoalsList({
                 Add to Goal
               </button>
             </div>
-            <div className="flex flex-col gap-2 ml-4">
+            <div className="flex flex-row gap-2 ml-0 md:ml-4 mt-2 md:mt-0">
               <button
                 className="text-gray-400 hover:text-blue-600"
                 title="Edit"

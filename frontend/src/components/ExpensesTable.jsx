@@ -39,7 +39,7 @@ const ExpensesTable = ({ dateFilter, selectedAccount, sortBy, sortOrder }) => {
   return (
     <div className="w-full flex flex-col bg-white p-4 shadow rounded-2xl mb-4">
       <div className="overflow-x-auto w-full shadow-md rounded-2xl">
-        <table className="w-full text-sm text-left border-separate border-spacing-0">
+        <table className="min-w-full text-sm text-left border-separate border-spacing-0">
           <thead>
             <tr>
               <th className="bg-[#b3c7e6] text-gray-700 font-semibold px-4 py-3 border-b border-gray-300 rounded-tl-2xl">
@@ -102,10 +102,10 @@ const ExpensesTable = ({ dateFilter, selectedAccount, sortBy, sortOrder }) => {
                   <td className="px-4 py-3 border-b border-gray-200">
                     {expense.beneficiary}
                   </td>
-                  <td className="px-4 py-3 border-b border-gray-200">
+                  <td className="px-4 py-3 border-b border-gray-200 whitespace-nowrap">
                     {expense.created_at}
                   </td>
-                  <td className="px-4 py-3 border-b border-gray-200">
+                  <td className="px-4 py-3 border-b border-gray-200 whitespace-nowrap">
                     {expense.amount}
                   </td>
                   <td className="px-4 py-3 border-b border-gray-200 text-center">

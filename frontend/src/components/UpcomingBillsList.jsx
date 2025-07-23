@@ -94,7 +94,7 @@ export default function UpcomingBillsList({
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 overflow-x-auto w-full">
       <div className="flex justify-start mb-4 ml-8">
         <button
           className="bg-[#b3c7e6] text-base font-semibold text-gray-700 shadow-sm hover:bg-[#9bb6db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 px-4 py-1.5 rounded transition"
@@ -114,9 +114,9 @@ export default function UpcomingBillsList({
       {bills.map((bill) => (
         <div
           key={bill.id}
-          className="flex flex-row items-center justify-between bg-white shadow rounded-2xl p-4 border border-gray-200"
+          className="flex flex-col md:flex-row items-start md:items-center justify-between bg-white shadow rounded-2xl p-4 border border-gray-200"
         >
-          <div className="flex flex-row items-center gap-4">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4 w-full">
             <span className="text-xl">
               <i
                 className="fa fa-edit"
@@ -125,8 +125,8 @@ export default function UpcomingBillsList({
               />
             </span>
             <div>
-              <div className="font-semibold text-lg">{bill.name}</div>
-              <div className="text-gray-500 text-sm">{bill.category_name}</div>
+              <div className="font-semibold text-base md:text-lg">{bill.name}</div>
+              <div className="text-gray-500 text-xs md:text-sm">{bill.category_name}</div>
               <div className="text-gray-400 text-xs">Due: 
                 {bill.next_execution_date
                   ? new Date(bill.next_execution_date).toLocaleDateString()
@@ -134,8 +134,8 @@ export default function UpcomingBillsList({
               </div>
             </div>
           </div>
-          <div className="flex flex-row items-center gap-4">
-            <span className="text-red-600 font-bold text-lg">
+          <div className="flex flex-row items-center gap-2 md:gap-4 mt-2 md:mt-0">
+            <span className="text-red-600 font-bold text-base md:text-lg">
               -${bill.amount?.toFixed(2) ?? "-.----"}
             </span>
             <button

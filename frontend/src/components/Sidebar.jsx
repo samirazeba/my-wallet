@@ -289,8 +289,6 @@ const Sidebar = () => {
             <div className="flex flex-col justify-between flex-1 mt-6">
               <nav className="-mx-3 space-y-6">
                 <div className="space-y-3">
-                  {/* ...nav links here, same as desktop... */}
-                  {/* Copy the nav links from above, or refactor into a function for DRYness */}
                   {/* Overview */}
                   <a
                     className="flex items-center px-3 py-2 text-gray-700 hover:bg-[#d1d0ce] rounded-lg transition duration-300"
@@ -313,7 +311,6 @@ const Sidebar = () => {
                     </svg>
                     <span className="ml-2 text-sm font-medium">Overview</span>
                   </a>
-                  {/* ...repeat for other nav items, add onClick={() => setMobileOpen(false)} to close menu */}
                   {/* Transactions */}
                   <a
                     className="flex items-center px-3 py-2 text-gray-700 hover:bg-[#d1d0ce] rounded-lg transition duration-300"
@@ -336,7 +333,135 @@ const Sidebar = () => {
                     </svg>
                     <span className="ml-2 text-sm font-medium">Transactions</span>
                   </a>
-                  {/* ...repeat for all nav links... */}
+                  {/* Expenses */}
+                  <a
+                    className="flex items-center px-3 py-2 text-gray-700 hover:bg-[#d1d0ce] rounded-lg transition duration-300"
+                    href="/expenses"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 4.5v15m0 0l-6-6m6 6l6-6"
+                      />
+                    </svg>
+                    <span className="ml-2 text-sm font-medium">Expenses</span>
+                  </a>
+                  {/* Upcoming Bills */}
+                  <a
+                    className="flex items-center px-3 py-2 text-gray-700 hover:bg-[#d1d0ce] rounded-lg transition duration-300"
+                    href="/upcoming-bills"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M17.25 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-6a2.25 2.25 0 01-2.25-2.25V6.75"
+                      />
+                    </svg>
+                    <span className="ml-2 text-sm font-medium">Upcoming Bills</span>
+                  </a>
+                  {/* Incomes */}
+                  <a
+                    className="flex items-center px-3 py-2 text-gray-700 hover:bg-[#d1d0ce] rounded-lg transition duration-300"
+                    href="/incomes"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 19.5v-15m0 0l6 6m-6-6l-6 6"
+                      />
+                    </svg>
+                    <span className="ml-2 text-sm font-medium">Incomes</span>
+                  </a>
+                  {/* Categories */}
+                  <a
+                    className="flex items-center px-3 py-2 text-gray-700 hover:bg-[#d1d0ce] rounded-lg transition duration-300"
+                    href="/categories"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3 7.5v9A2.25 2.25 0 005.25 19.5h13.5A2.25 2.25 0 0021 16.5v-9A2.25 2.25 0 0018.75 4.5H5.25A2.25 2.25 0 003 7.5z"
+                      />
+                    </svg>
+                    <span className="ml-2 text-sm font-medium">Categories</span>
+                  </a>
+                  {/* Saving Goals */}
+                  <a
+                    className="flex items-center px-3 py-2 text-gray-700 hover:bg-[#d1d0ce] rounded-lg transition duration-300"
+                    href="/saving-goals"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                      <circle cx="12" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                    </svg>
+                    <span className="ml-2 text-sm font-medium">Saving Goals</span>
+                  </a>
+                  {/* Profile */}
+                  <a
+                    className="flex items-center px-3 py-2 text-gray-700 hover:bg-[#d1d0ce] rounded-lg transition duration-300"
+                    href="/profile"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15.75 9A3.75 3.75 0 1112 5.25 3.75 3.75 0 0115.75 9zM4.5 19.5a7.5 7.5 0 1115 0v.75A2.25 2.25 0 0117.75 22.5h-11.5A2.25 2.25 0 014.5 20.25v-.75z"
+                      />
+                    </svg>
+                    <span className="ml-2 text-sm font-medium">Profile</span>
+                  </a>
                   {/* Log Out */}
                   <a
                     onClick={() => { setShowModal(true); setMobileOpen(false); }}
