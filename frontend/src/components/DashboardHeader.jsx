@@ -10,9 +10,9 @@ export default function DashboardHeader({ selectedAccount, onAccountChange, onDa
   return (
     <>
       {/* Header box: greeting and account selector */}
-      <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white p-4 shadow rounded-2xl mb-4">
-        <div className="flex flex-col mb-4 sm:mb-0">
-          <h1 className="text-2xl font-semibold mb-2">
+      <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white p-2 sm:p-4 shadow rounded-2xl mb-4 gap-2">
+        <div className="flex flex-col mb-2 sm:mb-0">
+          <h1 className="text-xl sm:text-2xl font-semibold mb-2">
             {loading && "Loading..."}
             {error && "Hello, User"}
             {!loading && !error && `Hello, ${fullName}`}

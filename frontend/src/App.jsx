@@ -32,7 +32,7 @@ function App() {
   return (
     <Router>
       <div className="flex flex-col min-h-screen">
-        <div className="flex-grow">
+        <div className="flex-grow min-h-0">
           <Routes>
             <Route
               path="/"

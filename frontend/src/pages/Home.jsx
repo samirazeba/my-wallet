@@ -68,13 +68,13 @@ const Home = () => {
   return (
     <div className="flex bg-gray-50 min-h-screen">
       <Sidebar />
-      <div className="flex-1 p-6 ml-64">
+      <div className="flex-1 p-2 sm:p-4 md:p-6 ml-0 md:ml-64 transition-all duration-300">
         <DashboardHeader
           selectedAccount={selectedAccount}
           onAccountChange={setSelectedAccount}
           onDateChange={setDateFilter}
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           <div>
             <BankAccountBox
               selectedAccount={selectedAccount}
@@ -120,7 +120,7 @@ const Home = () => {
                 </div>
               )}
               <button
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                className="mt-4 px-4 py-2 w-full sm:w-auto bg-blue-500 text-white rounded"
                 onClick={handleCloseModal}
               >
                 Close
@@ -128,7 +128,7 @@ const Home = () => {
             </div>
           </Modal>
         )}
-      <AddBankAccountModal
+        <AddBankAccountModal
           open={addModalOpen}
           onClose={() => setAddModalOpen(false)}
           onSubmit={handleAddBankAccount}

@@ -17,7 +17,7 @@ const Transactions = () => {
   return (
     <div className="flex bg-gray-50 min-h-screen">
       <Sidebar />
-      <div className="flex-1 p-6 ml-64">
+      <div className="flex-1 p-2 sm:p-4 md:p-6 ml-0 md:ml-64 transition-all duration-300">
         <TransactionsHeader
           selectedAccount={selectedAccount}
           onAccountChange={setSelectedAccount}
