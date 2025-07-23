@@ -68,6 +68,6 @@ async function executeAutomations() {
   }
 }
 
-cron.schedule("40 15 * * *", executeAutomations);
+cron.schedule("03 13 * * *", executeAutomations);
 
 module.exports = { executeAutomations };
