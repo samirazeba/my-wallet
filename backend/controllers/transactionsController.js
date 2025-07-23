@@ -467,6 +467,8 @@ exports.saveParsedTransactionsInternal = async function (userId, parsedData) {
   // Fetch all categories once for mapping
   const categories = await categoriesModel.getAllCategories();
 
+  let netChange = 0;
+
   for (const tx of transactions) {
     let bank_account_id = bankAccount.id;
 
@@ -516,8 +518,17 @@ exports.saveParsedTransactionsInternal = async function (userId, parsedData) {
     );
     results.push({ ...tx, status: "saved" });
     saved++;
+
+    netChange += tx.type === "Expense" ? -tx.amount : tx.amount;
   }
 
+  if (!newBankAccountCreated) {
+    await bankAccountModel.updateBankAccountBalance(
+      bankAccount.id,
+      netChange,
+      "Income"
+    );
+  }
   return {
     message: "Processed transactions",
     saved,
