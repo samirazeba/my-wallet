@@ -1,21 +1,21 @@
-const userModel = require('../models/userModel');
-const validateRegistrationInput = require('../contracts/registrationValidations');
-const savingGoalModel = require('../models/savingGoalModel');
-const emailVerificationsModel = require('../models/emailVerificationsModel');
+const userModel = require("../models/userModel");
+const validateRegistrationInput = require("../contracts/registrationValidations");
+const savingGoalModel = require("../models/savingGoalModel");
+const emailVerificationsModel = require("../models/emailVerificationsModel");
 const {
   sendPasswordResetEmail,
   sendVerificationEmail,
 } = require("../utils/email");
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 exports.getAllUsers = async (req, res) => {
-    try {
-        const users = await userModel.getAllUsers();
-        res.status(200).json(users);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching users', error });
-    }
+  try {
+    const users = await userModel.getAllUsers();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching users", error });
+  }
 };
 
 exports.register = async (req, res) => {
@@ -60,6 +60,21 @@ exports.register = async (req, res) => {
     // Send verification email
     await sendVerificationEmail(email, first_name, code);
 
+    const sent = await sendVerificationEmail(email, first_name, code);
+
+    // Log SendGrid API key and sender email for debugging (do not log the actual key in production!)
+    console.log("SENDGRID_API_KEY exists:", !!process.env.SENDGRID_API_KEY);
+    console.log("SENDER_EMAIL:", process.env.SENDER_EMAIL);
+
+    if (!sent) {
+      console.error(
+        "Failed to send verification email. Check SendGrid API key and sender email."
+      );
+      return res
+        .status(500)
+        .json({ message: "Failed to send verification email." });
+    }
+
     res.status(201).json({
       message:
         "Verification code sent to your email. Please verify to complete registration.",
@@ -91,10 +106,10 @@ exports.login = async (req, res) => {
 
     await savingGoalModel.expireOldSavingGoals();
 
-    const token = jwt.sign (
-      {id: user.id, email: user.email},
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
       process.env.JWT_SECRET || "defaultsecret",
-      {expiresIn: "168h"}// 7days
+      { expiresIn: "168h" } // 7days
     );
 
     // 3. Return success response with basic user info
@@ -106,10 +121,9 @@ exports.login = async (req, res) => {
         first_name: user.first_name,
         last_name: user.last_name,
         email: user.email,
-        phone_number: user.phone_number
-      }
+        phone_number: user.phone_number,
+      },
     });
-
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -124,9 +138,9 @@ exports.getUserFullName = async (req, res) => {
     }
     const fullName = await userModel.getUsersFullName(userId);
     if (fullName) {
-      res.json({fullName: fullName});
+      res.json({ fullName: fullName });
     } else {
-      res.status(404).json({message: "User not found"});
+      res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
     console.error("Error fetching user's full name:", error);
@@ -144,13 +158,13 @@ exports.getUserById = async (req, res) => {
     if (user) {
       res.json(user);
     } else {
-      res.status(404).json({message: "User not found"});
+      res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
     console.error("Error fetching user by ID:", error);
     res.status(500).json({ error: "Internal server error" });
   }
-}
+};
 
 //////////////////////// Forgot Password //////////////////////////
 
@@ -313,7 +327,12 @@ exports.changePassword = async (req, res) => {
     const hashedNewPassword = await bcrypt.hash(new_password, 10);
 
     // Change password in model
-    const result = await userModel.changePassword(userId, current_password, hashedNewPassword, bcrypt);
+    const result = await userModel.changePassword(
+      userId,
+      current_password,
+      hashedNewPassword,
+      bcrypt
+    );
     if (!result.success) {
       return res.status(400).json({ message: result.message });
     }
